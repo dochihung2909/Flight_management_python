@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Enum, DateTime, Double
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Enum, DateTime, Double
 from sqlalchemy.orm import relationship
 from app import db, app
 import enum
@@ -22,14 +22,14 @@ class BaseModel(db.Model):
     id = Column(String(50), primary_key=True)
 
 
-class Account(BaseModel, UserMixin):
+class AccountUser(BaseModel, UserMixin):
     __tablename__ = 'account'
 
     username = Column(String(50), nullable=False)
     password = Column(String(50), nullable=False)
-    user = relationship('User', backref='account', uselist=False)
-    account_role = Column(Enum(UserRoleEnum), default=UserRoleEnum.USER)
-
+    user = relationship('User', backref='account_user', uselist=False)
+    def __repr__(self):
+        return '<AccountUser: {}>'.format(self.id)
 
 class User(BaseModel):
     __tablename__ = 'user'
@@ -40,10 +40,11 @@ class User(BaseModel):
     phone_number = Column(String(50))
     email = Column(String(50))
     address = Column(String(50))
-    account_id = Column(String(50), ForeignKey(Account.id), nullable=False)
+    account_id = Column(String(50), ForeignKey(AccountUser.id), nullable=False)
     customer = relationship('Customer', backref='customer')
     administrator = relationship('Administrator', backref='administrator')
     employee = relationship('Employee', backref='employee')
+    user_role = Column(Enum(UserRoleEnum), default=UserRoleEnum.USER)
 
 
 class Customer(db.Model):
@@ -53,7 +54,7 @@ class Customer(db.Model):
     identify_id = Column(String(20))
     nation = Column(String(50))
     invoice = relationship('Invoice', backref='invoice')
-    e_ticket = relationship('ETicket', backref='e_ticket')
+    e_ticket = relationship('ETicket', backref='customer_e_ticket')
     ticket = relationship('Ticket', backref='ticket')
 
 
@@ -71,19 +72,24 @@ class Employee(db.Model):
     id = Column(String(50), ForeignKey(User.id), primary_key=True)
     work_place = Column(String(50))
     schedule = relationship('Schedule', backref='schedule')
-    invoice = relationship('Invoice', backref='invoice')
+    invoices = relationship('Invoice', backref='employee_invoice')
 
+    def __repr__(self):
+        return '<Employee: {}>'.format(self.id)
 
 class Invoice(db.Model):
     __tablename__ = 'invoice'
 
     id = Column(String(50), primary_key=True)
     date_created = Column(DateTime, nullable=False)
-    customer_id = Column(String(50), ForeignKey(User.id), nullable=False)
-    employee_id = Column(String(50), ForeignKey(User.id), nullable=False)
+    customer_id = Column(String(50), ForeignKey(Customer.id), nullable=False)
+    employee_id = Column(String(50), ForeignKey(Employee.id), nullable=False)
     total_price = Column(Double)
     note = Column(String(50))
-    details = relationship('Invoice_Details', backref='detail', uselist=False)
+    details = relationship('InvoiceDetails', backref='detail', uselist=False)
+
+    def __repr__(self):
+        return '<Invoice: {}>'.format(self.id)
 
 
 class InvoiceDetails(db.Model):
@@ -101,7 +107,7 @@ class ETicket(db.Model):
     status = Column(Boolean)
     date_booked = Column(DateTime)
     customer_id = Column(String(50), ForeignKey(Customer.id), nullable=False)
-    tickets = relationship('Ticket', backref='tickets')
+    tickets = relationship('Ticket', backref='eticket_tickets')
     invoice_details = Column(String(50), ForeignKey(InvoiceDetails.id), nullable=False)
 
 
@@ -110,7 +116,7 @@ class Airline(db.Model):
 
     id = Column(String(50), primary_key=True)
     airline_name = Column(String(50))
-    tickets = relationship('Ticket', backref='tickets')
+    tickets = relationship('Ticket', backref='airline_tickets')
 
 
 class TicketPrice(db.Model):
@@ -231,3 +237,10 @@ class StopAirport(db.Model):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+        import hashlib
+        # ad1 = Administrator(id='ADMIN00001', name='Do Chi Hung', dob='2003/09/30', sex=0, phone_number='0364623646', email='hungdo29090310@gmail.com', address='125 TMT1', account_id='A00001', user_role=UserRoleEnum.ADMIN)
+
+        # u1 = Account(id='A00001',username='hungts', password=hashlib.md5('123456'.encode('utf-8')).hexdigest())
+        # db.session.add(u1)
+        # db.session.commit()
+
