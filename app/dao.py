@@ -1,5 +1,5 @@
 import hashlib
-from models import User
+from app.models import User
 
 def auth_user(username, password):
     password = str(hashlib.md5(password.encode('utf-8')).hexdigest())

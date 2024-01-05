@@ -23,7 +23,7 @@ class BaseModel(db.Model):
 
 
 class AccountUser(BaseModel, UserMixin):
-    __tablename__ = 'account'
+    __tablename__ = 'account_user'
 
     username = Column(String(50), nullable=False)
     password = Column(String(50), nullable=False)

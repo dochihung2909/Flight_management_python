@@ -1,8 +1,77 @@
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/datepicker.min.js"></script>
+</head>
+
 {% extends 'base.html' %}
 
 {% block content %}
 
+    <form class="w-[80%] mx-auto">
+        <div class="flex pb-[10px]">
+            <div>
+                <input id="type_flight" type="checkbox" name="type_flight" value="roundTrip">
+                <label for="type_flight">
+                    <span>Khứ hồi</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="flex gap-[20px]">
+            <div class="flex">
+                <div class="relative">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-id="IcFlightTakeOff"><path d="M3 21H21" stroke="#0194f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M12 9L15.1924 7.93585C17.317 7.22767 19.6563 7.95843 21 9.75L7.44513 14.0629C5.86627 14.5653 4.1791 13.6926 3.67674 12.1137C3.66772 12.0854 3.65912 12.0569 3.65094 12.0283L3 9.75L5.25 10.875L9 9.75L4.5 3H5.25L12 9Z" stroke="#0194f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <input autocomplete="on" autocorrect="on" name="departure_airport" type="text" class="outline-[0px] font-[16px] py-[8px] px-[4px] border-r-[2px] placeholder-black h-[100%] focus:outline-none border-[4px] border-gray-200 text-gray-900 text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 ps-10 p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Điểm đi">
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-id="IcFlightLanding"><path d="M3 21H21" stroke="#0194f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M21 15L7.1263 13.8439C4.79398 13.6495 3 11.6998 3 9.3594V7.5L4.5 10.5H9L7.5 3H8.1L12 10.5L17.3419 11.5684C18.7036 11.8407 19.8632 12.7265 20.4843 13.9685L21 15ZM16.5 17.625L16.875 17.25L17.25 17.625L16.875 18L16.5 17.625Z" stroke="#0194f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <input name="arrival_airport" type="text" class="outline-[0px] font-[16px] py-[8px] px-[4px] border-l-[2px] placeholder-black h-[100%] focus:outline-none border-[4px] border-gray-200 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 ps-10 p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Điểm đến">
+
+                </div>
+            </div>
+            <div date-rangepicker class="flex items-center">
+                  <div class="relative">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                        </svg>
+                    </div>
+                    <input name="start" type="text" class="h-[100%] focus:outline-none border-r-[2px] border-[4px] border-gray-200 text-gray-900 text-sm rounded-l-lg  focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ngày đi">
+                  </div>
+                  <div  id="picktime_back" class="pointer-events-none relative">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                        </svg>
+                    </div>
+                    <input name="end" type="text" class="h-[100%] focus:outline-none border-l-[2px] border-[4px] border-gray-200 text-gray-900 text-sm rounded-r-lg  focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:placeholder-gray-400   dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ngày về">
+                </div>
+            </div>
+
+            <div class="flex bg-orange-500 rounded-[20px] border-[4px] border-gray-200">
+                <button type="button" class="flex w-[50px] h-[50px] items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-id="IcSystemSearch"><path d="M15 15L20.5 20.5M10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3C6.13401 3 3 6.13401 3 10C3 13.866 6.13401 17 10 17Z" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </button>
+            </div>
+
+        </div>
+    </form>
+
+    <script>
+        let roundTripBtn = document.querySelector("input[name='type_flight']")
+        roundTripBtn.addEventListener('click', function (e) {
+            if (this.checked) {
+                document.querySelector('#picktime_back').classList.remove('pointer-events-none')
+            } else {
+                document.querySelector('#picktime_back').classList.add('pointer-events-none')
+            }
+        })
+    </script>
 
 {% endblock %}
+
 
 

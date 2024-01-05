@@ -1,12 +1,17 @@
-from flask_admin import Admin, BaseView, expose
+from flask_admin import Admin, BaseView, expose, AdminIndexView
 from flask_login import logout_user, current_user
 from flask import redirect, request
 from app import app, dao
-from models import UserRoleEnum
+from app.models import UserRoleEnum
 
-from datetime import datetime
 
-admin = Admin(app=app, name='Quản lý chuyến bay', template_mode='bootstrap4')
+class MyAdmin(AdminIndexView):
+    @expose('/')
+    def index(self):
+        return self.render('admin/index.html')
+
+
+admin = Admin(app=app, name='Quản lý chuyến bay', template_mode='bootstrap4', index_view=MyAdmin())
 
 
 class AuthenticatedBaseView(BaseView):
