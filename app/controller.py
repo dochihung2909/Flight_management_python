@@ -5,7 +5,9 @@ from flask_login import login_user
 
 
 def home():
-    return render_template('frontpage.html')
+    airports = dao.get_all_airport()
+    seat_types = dao.get_all_seat_type()
+    return render_template('frontpage.html', airports=airports, seat_types=seat_types)
 
 
 def login_page():

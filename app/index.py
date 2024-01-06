@@ -1,7 +1,7 @@
 from flask import render_template
 from sqlalchemy.future import engine
 
-from app import app, controller, dao, db
+from app import app, controller, dao, db, login
 
 # This is a sample Python script.
 
@@ -11,10 +11,14 @@ from app import app, controller, dao, db
 app.add_url_rule('/', 'homepage', controller.home)
 app.add_url_rule('/admin/login', 'admin_login', controller.login_page, methods=['POST'])
 
+@login.user_loader
+def get_user(user_id):
+    return dao.get_user_by_id(user_id)
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     db.metadata.clear()
-    from app import admin
+    from app.admin import *
 
     app.run(debug=True, port=4000)
 

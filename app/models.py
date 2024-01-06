@@ -22,7 +22,7 @@ class BaseModel(db.Model):
     id = Column(String(50), primary_key=True)
 
 
-class AccountUser(BaseModel, UserMixin):
+class Account(BaseModel, UserMixin):
     __tablename__ = 'account_user'
 
     username = Column(String(50), nullable=False)
@@ -40,7 +40,7 @@ class User(BaseModel):
     phone_number = Column(String(50))
     email = Column(String(50))
     address = Column(String(50))
-    account_id = Column(String(50), ForeignKey(AccountUser.id), nullable=False)
+    account_id = Column(String(50), ForeignKey(Account.id), nullable=False)
     customer = relationship('Customer', backref='customer')
     administrator = relationship('Administrator', backref='administrator')
     employee = relationship('Employee', backref='employee')
@@ -55,7 +55,7 @@ class Customer(db.Model):
     nation = Column(String(50))
     invoice = relationship('Invoice', backref='invoice')
     e_ticket = relationship('ETicket', backref='customer_e_ticket')
-    ticket = relationship('Ticket', backref='ticket')
+    ticket = relationship('Ticket', backref='customer_ticket')
 
 
 class Administrator(db.Model):
@@ -71,7 +71,7 @@ class Employee(db.Model):
 
     id = Column(String(50), ForeignKey(User.id), primary_key=True)
     work_place = Column(String(50))
-    schedule = relationship('Schedule', backref='schedule')
+    schedule = relationship('Schedule', backref='employee_schedule')
     invoices = relationship('Invoice', backref='employee_invoice')
 
     def __repr__(self):
@@ -125,7 +125,7 @@ class TicketPrice(db.Model):
     id = Column(String(50), primary_key=True)
     price = Column(Integer)
     discount = Column(Integer)
-    ticket = relationship('Ticket', backref='ticket')
+    ticket = relationship('Ticket', backref='price_ticket')
 
 
 class Aircraft(db.Model):
@@ -145,8 +145,7 @@ class Airport(db.Model):
     id = Column(String(50), primary_key=True)
     name = Column(String(50))
     location = Column(String(50))
-    route = relationship('Route', backref='route')
-    stop_airport = relationship('StopAirport', backref='stop_airport')
+    stop_airport = relationship('StopAirport', backref='airport_stop_airport')
 
 
 class ReportRevenue(db.Model):
@@ -172,9 +171,11 @@ class Route(db.Model):
     __tablename__ = 'route'
 
     id = Column(String(50), primary_key=True)
-    departure_airport = Column(String(50), ForeignKey(Airport.id))
-    arrival_airport = Column(String(50), ForeignKey(Airport.id))
+    departure_airport_id = Column(String(50), ForeignKey(Airport.id))
+    arrival_airport_id = Column(String(50), ForeignKey(Airport.id))
     report_id = Column(String(50), ForeignKey(DetailsReportRevenue.id))
+    departure_airport = relationship('Airport', foreign_keys=[departure_airport_id])
+    arrival_airport = relationship('Airport', foreign_keys=[arrival_airport_id])
 
 
 class Flight(db.Model):
@@ -184,10 +185,10 @@ class Flight(db.Model):
     flight_date = Column(DateTime)
     departure_time = Column(DateTime)
     arrival_time = Column(DateTime)
-    schedule = relationship('Schedule', backref='schedule')
+    schedule = relationship('Schedule', backref='flight_schedule')
     route = Column(String(50), ForeignKey(Route.id), nullable=False)
-    stop_airport = relationship('StopAirport', backref='stop_airport')
-    ticket = relationship('Ticket', backref='ticket')
+    stop_airport = relationship('StopAirport', backref='flight_stop_airport')
+    ticket = relationship('Ticket', backref='flight_ticket')
     aircraft = Column(String(50), ForeignKey(Aircraft.id), nullable=False)
 
 
@@ -226,7 +227,7 @@ class Schedule(db.Model):
 class StopAirport(db.Model):
     __tablename__ = 'stop_airport'
 
-    id = Column(String(50), ForeignKey(Airport.id), primary_key=True)
+    id = Column(String(50), primary_key=True)
     minimum_time = Column(Integer)
     maximum_time = Column(Integer)
     note = Column(String(50))
@@ -236,11 +237,40 @@ class StopAirport(db.Model):
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
+        # db.create_all()
         import hashlib
-        # ad1 = Administrator(id='ADMIN00001', name='Do Chi Hung', dob='2003/09/30', sex=0, phone_number='0364623646', email='hungdo29090310@gmail.com', address='125 TMT1', account_id='A00001', user_role=UserRoleEnum.ADMIN)
+        # u1 = User(id='ADMIN00001', name='Do Chi Hung', dob='2003/09/30', sex=0, phone_number='0364623646', email='hungdo29090310@gmail.com', address='125 TMT1', account_id='A00001', user_role=UserRoleEnum.ADMIN)
+        # ad1 = Administrator(id='ADMIN00001')
+        #
+        # acc1 = Account(id='A00001',username='hungts', password=hashlib.md5('123456'.encode('utf-8')).hexdigest())
+        #
+        # ap1 = Airport(id='AP00001', name='Tân Sơn Nhất', location='Ho Chi Minh City')
+        # ap2 = Airport(id='AP00002', name='Nội Bài', location='Hà Nội')
+        # ap3 = Airport(id='AP00003', name='Đà Nẵng', location='Đà Nẵng')
+        # ap4 = Airport(id='AP00004', name='Cam Ranh', location='Khánh Hòa')
+        # ap5 = Airport(id='AP00005', name='Phú Quốc', location='Kiên Giang')
+        # ap6 = Airport(id='AP00006', name='Cần Thơ', location='Cần Thơ')
+        # ap7 = Airport(id='AP00007', name='Vinh', location='Nghệ An')
+        # ap8 = Airport(id='AP00008', name='Phù Cát', location='Bình Định')
+        # ap9 = Airport(id='AP00009', name='Chu Lai', location='Quảng Nam')
+        # ap10 = Airport(id='AP00010', name='Tuy Hòa', location='Phú Yên')
+        #
+        foreign_airports = [
+            Airport(id='APF00001', name='Heathrow Airport', location='London, United Kingdom'),
+            Airport(id='APF00002', name='Charles de Gaulle Airport', location='Paris, France'),
+            Airport(id='APF00003', name='Los Angeles International Airport', location='Los Angeles, United States'),
+            Airport(id='APF00004', name='Narita International Airport', location='Tokyo, Japan'),
+            Airport(id='APF00005', name='Dubai International Airport', location='Dubai, United Arab Emirates'),
+            Airport(id='APF00006', name='Sydney Airport', location='Sydney, Australia'),
+            Airport(id='APF00007', name='Singapore Changi Airport', location='Singapore'),
+            Airport(id='APF00008', name='Frankfurt Airport', location='Frankfurt, Germany'),
+            Airport(id='APF00009', name='Incheon International Airport', location='Seoul, South Korea'),
+            Airport(id='APF00010', name='Beijing Capital International Airport', location='Beijing, China')
+        ]
 
-        # u1 = Account(id='A00001',username='hungts', password=hashlib.md5('123456'.encode('utf-8')).hexdigest())
+        db.session.add_all(foreign_airports)
         # db.session.add(u1)
-        # db.session.commit()
+        # db.session.add(ad1)
+        # db.session.add(acc1)
+        db.session.commit()
 
