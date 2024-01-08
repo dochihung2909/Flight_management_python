@@ -10,7 +10,7 @@ class MyAdmin(AdminIndexView):
     def index(self):
         return self.render('admin/index.html')
 
-admin = Admin(app=app, name='Quản lý chuyến bay', template_mode='bootstrap4')
+admin = Admin(app=app, name='Quản lý chuyến bay', template_mode='bootstrap4', index_view=MyAdmin())
 
 
 class AuthenticatedAdmin(ModelView):

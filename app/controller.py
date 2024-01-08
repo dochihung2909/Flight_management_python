@@ -17,3 +17,7 @@ def login_page():
     if user:
         login_user(user=user)
     return redirect('/admin')
+
+
+def creae_schedule():
+    return render_template('/em/schedule.html')

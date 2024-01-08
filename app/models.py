@@ -6,7 +6,7 @@ import enum
 
 
 class UserRoleEnum(enum.Enum):
-    USER = 1
+    CUSTOMER = 1
     ADMIN = 2
     EMPLOYEE = 3
 
@@ -22,69 +22,27 @@ class BaseModel(db.Model):
     id = Column(String(50), primary_key=True)
 
 
-class Account(BaseModel, UserMixin):
-    __tablename__ = 'account_user'
-
-    username = Column(String(50), nullable=False)
-    password = Column(String(50), nullable=False)
-    user = relationship('User', backref='account_user', uselist=False)
-    def __repr__(self):
-        return '<AccountUser: {}>'.format(self.id)
-
-class User(BaseModel):
+class User(BaseModel, UserMixin):
     __tablename__ = 'user'
 
     name = Column(String(50), nullable=False)
     dob = Column(DateTime)
     sex = Column(Boolean)
     phone_number = Column(String(50))
+    citizen_id = Column(String(50))
     email = Column(String(50))
     address = Column(String(50))
-    account_id = Column(String(50), ForeignKey(Account.id), nullable=False)
-    customer = relationship('Customer', backref='customer')
-    administrator = relationship('Administrator', backref='administrator')
-    employee = relationship('Employee', backref='employee')
-    user_role = Column(Enum(UserRoleEnum), default=UserRoleEnum.USER)
+    username = Column(String(50), nullable=False)
+    password = Column(String(50), nullable=False)
+    user_role = Column(Enum(UserRoleEnum), default=UserRoleEnum.CUSTOMER)
+    invoices = relationship('Invoice', backref='user_invoice')
 
 
-class Customer(db.Model):
-    __tablename__ = 'customer'
-
-    id = Column(String(50), ForeignKey(User.id), primary_key=True)
-    identify_id = Column(String(20))
-    nation = Column(String(50))
-    invoice = relationship('Invoice', backref='invoice')
-    e_ticket = relationship('ETicket', backref='customer_e_ticket')
-    ticket = relationship('Ticket', backref='customer_ticket')
-
-
-class Administrator(db.Model):
-    __tablename__ = 'administrator'
-
-    id = Column(String(50), ForeignKey(User.id), primary_key=True)
-    work_place = Column(String(50))
-    report = relationship('ReportRevenue', backref='report_revenue')
-
-
-class Employee(db.Model):
-    __tablename__ = 'employee'
-
-    id = Column(String(50), ForeignKey(User.id), primary_key=True)
-    work_place = Column(String(50))
-    schedule = relationship('Schedule', backref='employee_schedule')
-    invoices = relationship('Invoice', backref='employee_invoice')
-
-    def __repr__(self):
-        return '<Employee: {}>'.format(self.id)
-
-class Invoice(db.Model):
+class Invoice(BaseModel):
     __tablename__ = 'invoice'
 
-    id = Column(String(50), primary_key=True)
     date_created = Column(DateTime, nullable=False)
-    customer_id = Column(String(50), ForeignKey(Customer.id), nullable=False)
-    employee_id = Column(String(50), ForeignKey(Employee.id), nullable=False)
-    total_price = Column(Double)
+    user_id = Column(String(50), ForeignKey(User.id), nullable=False)
     note = Column(String(50))
     details = relationship('InvoiceDetails', backref='detail', uselist=False)
 
@@ -92,40 +50,21 @@ class Invoice(db.Model):
         return '<Invoice: {}>'.format(self.id)
 
 
-class InvoiceDetails(db.Model):
+class InvoiceDetails(BaseModel):
     __tablename__ = 'invoice_details'
 
-    id = Column(String(50), primary_key=True)
     invoice_id = Column(String(50), ForeignKey(Invoice.id), nullable=False)
-    e_ticket = relationship('ETicket', backref='e_ticket')
+    total_price = Column(Double)
+    quantity = Column(Integer)
 
 
-class ETicket(db.Model):
+class ETicket(BaseModel):
     __tablename__ = 'e_ticket'
 
-    id = Column(String(50), primary_key=True)
     status = Column(Boolean)
     date_booked = Column(DateTime)
-    customer_id = Column(String(50), ForeignKey(Customer.id), nullable=False)
+    customer_id = Column(String(50), ForeignKey(User.id), nullable=False)
     tickets = relationship('Ticket', backref='eticket_tickets')
-    invoice_details = Column(String(50), ForeignKey(InvoiceDetails.id), nullable=False)
-
-
-class Airline(db.Model):
-    __tablename__ = 'airline'
-
-    id = Column(String(50), primary_key=True)
-    airline_name = Column(String(50))
-    tickets = relationship('Ticket', backref='airline_tickets')
-
-
-class TicketPrice(db.Model):
-    __tablename__ = 'ticket_price'
-
-    id = Column(String(50), primary_key=True)
-    price = Column(Integer)
-    discount = Column(Integer)
-    ticket = relationship('Ticket', backref='price_ticket')
 
 
 class Aircraft(db.Model):
@@ -145,7 +84,6 @@ class Airport(db.Model):
     id = Column(String(50), primary_key=True)
     name = Column(String(50))
     location = Column(String(50))
-    stop_airport = relationship('StopAirport', backref='airport_stop_airport')
 
 
 class ReportRevenue(db.Model):
@@ -156,7 +94,7 @@ class ReportRevenue(db.Model):
     report_time = Column(DateTime)
     time_created = Column(DateTime)
     detail_report = relationship('DetailsReportRevenue', backref='details_report_revenue')
-    administrator = Column(String(50), ForeignKey(Administrator.id), nullable=False)
+    administrator = Column(String(50), ForeignKey(User.id), nullable=False)
 
 
 class DetailsReportRevenue(db.Model):
@@ -178,83 +116,80 @@ class Route(db.Model):
     arrival_airport = relationship('Airport', foreign_keys=[arrival_airport_id])
 
 
-class Flight(db.Model):
+class Flight(BaseModel):
     __tablename__ = 'flight'
 
-    id = Column(String(50), primary_key=True)
     flight_date = Column(DateTime)
     departure_time = Column(DateTime)
     arrival_time = Column(DateTime)
-    schedule = relationship('Schedule', backref='flight_schedule')
+    economy_seats = Column(Integer)
+    business_seats = Column(Integer)
+    schedule = relationship('Schedule', backref='flight_schedule', uselist=False)
     route = Column(String(50), ForeignKey(Route.id), nullable=False)
     stop_airport = relationship('StopAirport', backref='flight_stop_airport')
     ticket = relationship('Ticket', backref='flight_ticket')
     aircraft = Column(String(50), ForeignKey(Aircraft.id), nullable=False)
 
 
-class Ticket(db.Model):
-    __tablename__ = 'ticket'
-
-    id = Column(String(50), primary_key=True)
-    fly_date = Column(DateTime)
-    seat = relationship('Seat', backref='seat', uselist=False)
-    platform = Column(String(50))
-    e_ticket_id = Column(String(50), ForeignKey(ETicket.id), nullable=False)
-    airline_id = Column(String(50), ForeignKey(Airline.id), nullable=False)
-    ticket_price = Column(String(50), ForeignKey(TicketPrice.id), nullable=False)
-    customer = Column(String(50), ForeignKey(Customer.id), nullable=False)
-    flight = Column(String(50), ForeignKey(Flight.id), nullable=False)
-
-
-class Seat(db.Model):
+class Seat(BaseModel):
     __tablename__ = 'seat'
 
-    id = Column(String(50), primary_key=True)
     name = Column(String(10))
     type = Column(Enum(SeatRoleEnum), default=SeatRoleEnum.ECONOMY)
-    ticket = Column(String(50), ForeignKey(Ticket.id), nullable=False)
     aircraft = Column(String(50), ForeignKey(Aircraft.id), nullable=False)
+    ticket = relationship('Ticket', backref='seat_ticket', uselist=False)
 
 
-class Schedule(db.Model):
+class Ticket(BaseModel):
+    __tablename__ = 'ticket'
+
+    fly_date = Column(DateTime)
+    e_ticket_id = Column(String(50), ForeignKey(ETicket.id), nullable=False)
+    flight_id = Column(String(50), ForeignKey(Flight.id), nullable=False)
+    seat_id = Column(String(50), ForeignKey(Seat.id), nullable=False)
+    customer_id = Column(String(50), ForeignKey(User.id), nullable=False)
+
+
+class Schedule(BaseModel):
     __tablename__ = 'schedule'
 
     id = Column(String(50), primary_key=True)
-    employee_id = Column(String(50), ForeignKey(Employee.id))
+    employee_id = Column(String(50), ForeignKey(User.id))
     flight_id = Column(String(50), ForeignKey(Flight.id))
 
 
 class StopAirport(db.Model):
     __tablename__ = 'stop_airport'
 
-    id = Column(String(50), primary_key=True)
+    id = Column(String(50), ForeignKey(Airport.id), primary_key=True)
     minimum_time = Column(Integer)
     maximum_time = Column(Integer)
     note = Column(String(50))
     flight_id = Column(String(50), ForeignKey(Flight.id), nullable=False)
     airport_id = Column(String(50), ForeignKey(Airport.id), nullable=False)
+    stop_aiport = relationship('Airport', foreign_keys=[id])
+    airport = relationship('Airport', foreign_keys=[airport_id])
 
 
 if __name__ == '__main__':
     with app.app_context():
-        # db.create_all()
+        db.create_all()
         import hashlib
-        # u1 = User(id='ADMIN00001', name='Do Chi Hung', dob='2003/09/30', sex=0, phone_number='0364623646', email='hungdo29090310@gmail.com', address='125 TMT1', account_id='A00001', user_role=UserRoleEnum.ADMIN)
-        # ad1 = Administrator(id='ADMIN00001')
-        #
-        # acc1 = Account(id='A00001',username='hungts', password=hashlib.md5('123456'.encode('utf-8')).hexdigest())
-        #
-        # ap1 = Airport(id='AP00001', name='Tân Sơn Nhất', location='Ho Chi Minh City')
-        # ap2 = Airport(id='AP00002', name='Nội Bài', location='Hà Nội')
-        # ap3 = Airport(id='AP00003', name='Đà Nẵng', location='Đà Nẵng')
-        # ap4 = Airport(id='AP00004', name='Cam Ranh', location='Khánh Hòa')
-        # ap5 = Airport(id='AP00005', name='Phú Quốc', location='Kiên Giang')
-        # ap6 = Airport(id='AP00006', name='Cần Thơ', location='Cần Thơ')
-        # ap7 = Airport(id='AP00007', name='Vinh', location='Nghệ An')
-        # ap8 = Airport(id='AP00008', name='Phù Cát', location='Bình Định')
-        # ap9 = Airport(id='AP00009', name='Chu Lai', location='Quảng Nam')
-        # ap10 = Airport(id='AP00010', name='Tuy Hòa', location='Phú Yên')
-        #
+        u1 = User(id='ADMIN00001', username='hungts', password=hashlib.md5('123456'.encode('utf-8')).hexdigest(), name='Do Chi Hung', dob='2003/09/30', sex=0, phone_number='0364623646', email='hungdo29090310@gmail.com', address='125 TMT1', user_role=UserRoleEnum.ADMIN)
+
+        native_airports = [
+            Airport(id='AP00001', name='Tân Sơn Nhất', location='Ho Chi Minh City'),
+            Airport(id='AP00002', name='Nội Bài', location='Hà Nội'),
+            Airport(id='AP00003', name='Đà Nẵng', location='Đà Nẵng'),
+            Airport(id='AP00004', name='Cam Ranh', location='Khánh Hòa'),
+            Airport(id='AP00005', name='Phú Quốc', location='Kiên Giang'),
+            Airport(id='AP00006', name='Cần Thơ', location='Cần Thơ'),
+            Airport(id='AP00007', name='Vinh', location='Nghệ An'),
+            Airport(id='AP00008', name='Phù Cát', location='Bình Định'),
+            Airport(id='AP00009', name='Chu Lai', location='Quảng Nam'),
+            Airport(id='AP00010', name='Tuy Hòa', location='Phú Yên')
+        ]
+
         foreign_airports = [
             Airport(id='APF00001', name='Heathrow Airport', location='London, United Kingdom'),
             Airport(id='APF00002', name='Charles de Gaulle Airport', location='Paris, France'),
@@ -268,9 +203,8 @@ if __name__ == '__main__':
             Airport(id='APF00010', name='Beijing Capital International Airport', location='Beijing, China')
         ]
 
+        db.session.add_all(native_airports)
         db.session.add_all(foreign_airports)
-        # db.session.add(u1)
-        # db.session.add(ad1)
-        # db.session.add(acc1)
+        db.session.add(u1)
         db.session.commit()
 

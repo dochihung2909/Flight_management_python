@@ -10,6 +10,7 @@ from app import app, controller, dao, db, login
 
 app.add_url_rule('/', 'homepage', controller.home)
 app.add_url_rule('/admin/login', 'admin_login', controller.login_page, methods=['POST'])
+app.add_url_rule('/em/schedule', 'employee_schedule', controller.creae_schedule)
 
 @login.user_loader
 def get_user(user_id):
