@@ -18,53 +18,80 @@
     <div class="">
         <form method="GET" action="/schedule">
             <div class="flex items-center gap-[4px] pb-[10px]">
-                <input id="type_flight" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" type="checkbox" name="type_flight" value="roundTrip">
-                <label for="type_flight">
-                    <span>Khứ hồi</span>
-                </label>
+                <div>
+                    <input id="type_flight" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" type="checkbox" name="type_flight" value="roundTrip">
+                    <label for="type_flight">
+                        <span>Khứ hồi</span>
+                    </label>
+                </div>
+
             </div>
-            <div class="flex gap-[20px]">
-                <div class="flex flex-1">
+            <div class="flex items-center gap-[20px]">
+                <div class="relative flex items-center flex-1">
                     <div class="w-full relative">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-id="IcFlightTakeOff"><path d="M3 21H21" stroke="#0194f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M12 9L15.1924 7.93585C17.317 7.22767 19.6563 7.95843 21 9.75L7.44513 14.0629C5.86627 14.5653 4.1791 13.6926 3.67674 12.1137C3.66772 12.0854 3.65912 12.0569 3.65094 12.0283L3 9.75L5.25 10.875L9 9.75L4.5 3H5.25L12 9Z" stroke="#0194f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        <h1 class="mb-[4px]">
+                            Từ
+                        </h1>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-id="IcFlightTakeOff"><path d="M3 21H21" stroke="#0194f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M12 9L15.1924 7.93585C17.317 7.22767 19.6563 7.95843 21 9.75L7.44513 14.0629C5.86627 14.5653 4.1791 13.6926 3.67674 12.1137C3.66772 12.0854 3.65912 12.0569 3.65094 12.0283L3 9.75L5.25 10.875L9 9.75L4.5 3H5.25L12 9Z" stroke="#0194f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </div>
+                            <input required id="depature_airport" autocomplete="on" autocorrect="on" name="departure_airport" type="text" class="text-[16px] py-[16px] w-full h-[100%] focus:outline-none border-r-[2px] border-[4px] border-gray-200 text-gray-900 text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block ps-10 p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500 datepicker-input" placeholder="Điểm đi">
                         </div>
-                        <input required id="depature_airport" autocomplete="on" autocorrect="on" name="departure_airport" type="text" class="w-full outline-[0px] font-[16px] py-[8px] px-[4px] border-r-[2px] placeholder-black h-[100%] focus:outline-none border-[4px] border-gray-200 text-gray-900 text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 ps-10 p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Điểm đi">
-
                     </div>
-                    <div class="w-full  relative">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-id="IcFlightLanding"><path d="M3 21H21" stroke="#0194f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M21 15L7.1263 13.8439C4.79398 13.6495 3 11.6998 3 9.3594V7.5L4.5 10.5H9L7.5 3H8.1L12 10.5L17.3419 11.5684C18.7036 11.8407 19.8632 12.7265 20.4843 13.9685L21 15ZM16.5 17.625L16.875 17.25L17.25 17.625L16.875 18L16.5 17.625Z" stroke="#0194f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                        </div>
-                        <input required id="arrival_airport" name="arrival_airport" type="text" class="w-full outline-[0px] font-[16px] py-[8px] px-[4px] border-l-[2px] placeholder-black h-[100%] focus:outline-none border-[4px] border-gray-200 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 ps-10 p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Điểm đến">
 
+                    <div class="w-full relative">
+
+                        <h1 class="mb-[4px]">
+                            Đến
+                        </h1>
+                        <div class="relative">
+                            <div class="cursor-pointer p-2 rounded-[900px] absolute top-1/2 left-0 transform -translate-x-1/2 -translate-y-1/2 z-10 bg-white">
+                                <img src="https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/3/331a92149a02dc615986206c588d6642.svg">
+                            </div>
+                            <div class="absolute inset-y-0 start-0 flex items-center pl-[20px] pointer-events-none">
+                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-id="IcFlightLanding"><path d="M3 21H21" stroke="#0194f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M21 15L7.1263 13.8439C4.79398 13.6495 3 11.6998 3 9.3594V7.5L4.5 10.5H9L7.5 3H8.1L12 10.5L17.3419 11.5684C18.7036 11.8407 19.8632 12.7265 20.4843 13.9685L21 15ZM16.5 17.625L16.875 17.25L17.25 17.625L16.875 18L16.5 17.625Z" stroke="#0194f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </div>
+                            <input required id="arrival_airport" name="arrival_airport" type="text" class="text-[16px] py-[16px] w-full pl-[48px] h-[100%] focus:outline-none border-l-[2px] border-[4px] border-gray-200 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block ps-10 p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500 datepicker-input" placeholder="Điểm đến">
+                        </div>
                     </div>
                 </div>
+
                 <div date-rangepicker class="flex items-center flex-1">
                       <div class="w-full relative">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                            </svg>
+                        <h1 class="mb-[4px]">
+                            Đến
+                        </h1>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                                </svg>
+                            </div>
+                            <input name="start" type="text" class=" text-[16px] py-[16px]  h-[100%] focus:outline-none border-r-[2px] border-[4px] border-gray-200 text-gray-900 text-sm rounded-l-lg  focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ngày đi">
                         </div>
-                        <input name="start" type="text" class="w-full h-[100%] focus:outline-none border-r-[2px] border-[4px] border-gray-200 text-gray-900 text-sm rounded-l-lg  focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ngày đi">
                       </div>
                       <div  id="picktime_back" class="pointer-events-none w-full relative">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                            </svg>
+                        <h1 class="mb-[4px]">
+                            Đến
+                        </h1>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                                </svg>
+                            </div>
+                            <input required name="end" type="text" class="text-[16px] py-[16px] h-[100%] focus:outline-none border-l-[2px] border-[4px] border-gray-200 text-gray-900 text-sm rounded-r-lg  focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ngày về">
                         </div>
-                        <input required name="end" type="text" class="w-full h-[100%] focus:outline-none border-l-[2px] border-[4px] border-gray-200 text-gray-900 text-sm rounded-r-lg  focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ngày về">
                     </div>
                 </div>
 
-                <div>
+                <div class="self-end">
                     <div  class="w-full relative">
                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-id="IcTransportSeatClass"><path d="M6.99997 21H17M4.10496 3H4.76788C6.0927 3 7.26067 3.869 7.64136 5.13796L9.78617 12.2873C9.91307 12.7103 10.3024 13 10.744 13H16.4059C18.0152 13 19.7434 13.8444 20.5714 15.2244C21.3043 16.4459 20.4244 18 18.9999 18H7.21493C5.67368 18 4.38318 16.8321 4.22982 15.2985L3.10992 4.0995C3.05105 3.51082 3.51333 3 4.10496 3Z" stroke="#687176" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M13 10H17" stroke="#0194f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                         </div>
-                        <select style="-webkit-appearance: none" id="countries" class="h-full ps-10 p-2.5 border-[4px] border-gray-200  bg-gray-50 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <select style="-webkit-appearance: none" id="countries" class="py-[16px] h-full ps-10 p-2.5 border-[4px] border-gray-200  bg-gray-50 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             {% for type in seat_types %}
                                <option value="{{ type }}">{{ type }}</option>
                             {% endfor %}
@@ -72,7 +99,7 @@
                     </div>
                 </div>
 
-                <div class="flex bg-orange-500 rounded-[20px] border-[4px] border-gray-200">
+                <div class="self-end flex bg-orange-500 rounded-[20px] border-[4px] border-gray-200">
                     <button onclick="bookFlight()" type="button" class="flex w-[50px] h-[50px] items-center justify-center">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-id="IcSystemSearch"><path d="M15 15L20.5 20.5M10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3C6.13401 3 3 6.13401 3 10C3 13.866 6.13401 17 10 17Z" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                     </button>

@@ -1,5 +1,5 @@
 import hashlib
-from app.models import User, Airport, SeatRoleEnum
+from app.models import User, Airport, SeatRoleEnum, Flight
 
 
 def auth_user(username, password):
@@ -21,3 +21,8 @@ def get_user_by_id(user_id):
 def get_all_seat_type():
     seat_types = [e.name for e in SeatRoleEnum]
     return seat_types
+
+
+def add_flight(flight):
+    if flight:
+        f = Flight(id=flight.id)
