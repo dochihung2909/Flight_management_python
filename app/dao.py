@@ -1,5 +1,6 @@
 import hashlib
-from app.models import User, Airport, SeatRoleEnum, Flight
+from app.models import User, Airport, SeatRoleEnum, Flight, Route, Aircraft
+from app import db, dao
 
 
 def auth_user(username, password):
@@ -25,4 +26,37 @@ def get_all_seat_type():
 
 def add_flight(flight):
     if flight:
-        f = Flight(id=flight.id)
+        flight_id = f'F{dao.count_flight():05d}'
+        f = Flight(id=flight_id, departure_time=flight.get('departure_time'), time_flight=flight.get('time_flight'), economy_seats=flight.get('economy_seats'), business_seats=flight.get('business_seats'), route=flight.get('route'), aircraft=flight.get('aircraft'))
+        db.session.add(f)
+        db.session.commit()
+
+def get_all_route():
+    routes = Route.query
+    return routes.all()
+
+def find_route(departure_airport, arrival_airport):
+    routes = Route.query
+
+    routes = routes.filter(Route.departure_airport == departure_airport and Route.arrival_airport == arrival_airport)
+    return routes.all()[0]
+
+
+def get_aircraft(kw = None):
+    aircrafts = Aircraft.query
+
+    if kw:
+        aircrafts = aircrafts.filter(Aircraft.name.__eq__(kw))
+
+    return aircrafts.all()
+
+def get_airport(name = None):
+    airports = Airport.query
+
+    if name:
+        airports = airports.filter(Airport.name.__eq__(name))
+
+    return airports
+
+def count_flight():
+    return db.session.query(Flight.id).count()

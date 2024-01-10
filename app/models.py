@@ -1,8 +1,9 @@
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Enum, DateTime, Double
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Enum, DateTime, Double, Time
 from sqlalchemy.orm import relationship
 from app import db, app
 import enum
+import datetime
 
 
 class UserRoleEnum(enum.Enum):
@@ -35,16 +36,19 @@ class User(BaseModel, UserMixin):
     username = Column(String(50), nullable=False)
     password = Column(String(50), nullable=False)
     user_role = Column(Enum(UserRoleEnum), default=UserRoleEnum.CUSTOMER)
-    invoices = relationship('Invoice', backref='user_invoice')
+    invoices = relationship('Invoice', backref='employee_invoice')
+    ticket = relationship('Ticket', backref='customer_ticket')
+    e_ticket = relationship('ETicket', backref='customer_eticket')
+    employee_schedule = relationship('Schedule', backref='employee_schedule')
 
 
 class Invoice(BaseModel):
     __tablename__ = 'invoice'
 
     date_created = Column(DateTime, nullable=False)
-    user_id = Column(String(50), ForeignKey(User.id), nullable=False)
+    employee_id = Column(String(50), ForeignKey(User.id), nullable=False)
     note = Column(String(50))
-    details = relationship('InvoiceDetails', backref='detail', uselist=False)
+    details = relationship('InvoiceDetails', backref='invoice_detail', uselist=False)
 
     def __repr__(self):
         return '<Invoice: {}>'.format(self.id)
@@ -78,40 +82,18 @@ class Aircraft(db.Model):
     flight = relationship('Flight', backref='flight')
 
 
-class Airport(db.Model):
+class Airport(BaseModel):
     __tablename__ = 'airport'
 
-    id = Column(String(50), primary_key=True)
     name = Column(String(50))
     location = Column(String(50))
 
 
-class ReportRevenue(db.Model):
-    __tablename__ = 'report_revenue'
-
-    id = Column(String(50), primary_key=True)
-    total_revenue = Column(Double)
-    report_time = Column(DateTime)
-    time_created = Column(DateTime)
-    detail_report = relationship('DetailsReportRevenue', backref='details_report_revenue')
-    administrator = Column(String(50), ForeignKey(User.id), nullable=False)
-
-
-class DetailsReportRevenue(db.Model):
-    __tablename__ = 'details_report_revenue'
-
-    id = Column(String(50), primary_key=True)
-    report_id = Column(String(50), ForeignKey(ReportRevenue.id))
-    routes = relationship('Route', backref='routes')
-
-
-class Route(db.Model):
+class Route(BaseModel):
     __tablename__ = 'route'
 
-    id = Column(String(50), primary_key=True)
     departure_airport_id = Column(String(50), ForeignKey(Airport.id))
     arrival_airport_id = Column(String(50), ForeignKey(Airport.id))
-    report_id = Column(String(50), ForeignKey(DetailsReportRevenue.id))
     departure_airport = relationship('Airport', foreign_keys=[departure_airport_id])
     arrival_airport = relationship('Airport', foreign_keys=[arrival_airport_id])
 
@@ -119,16 +101,15 @@ class Route(db.Model):
 class Flight(BaseModel):
     __tablename__ = 'flight'
 
-    flight_date = Column(DateTime)
     departure_time = Column(DateTime)
-    arrival_time = Column(DateTime)
+    time_flight = Column(Time)
     economy_seats = Column(Integer)
     business_seats = Column(Integer)
-    schedule = relationship('Schedule', backref='flight_schedule', uselist=False)
     route = Column(String(50), ForeignKey(Route.id), nullable=False)
+    aircraft = Column(String(50), ForeignKey(Aircraft.id), nullable=False)
+    schedule = relationship('Schedule', backref='flight_schedule', uselist=False)
     stop_airport = relationship('StopAirport', backref='flight_stop_airport')
     ticket = relationship('Ticket', backref='flight_ticket')
-    aircraft = Column(String(50), ForeignKey(Aircraft.id), nullable=False)
 
 
 class Seat(BaseModel):
@@ -153,7 +134,6 @@ class Ticket(BaseModel):
 class Schedule(BaseModel):
     __tablename__ = 'schedule'
 
-    id = Column(String(50), primary_key=True)
     employee_id = Column(String(50), ForeignKey(User.id))
     flight_id = Column(String(50), ForeignKey(Flight.id))
 
@@ -177,7 +157,7 @@ if __name__ == '__main__':
         import hashlib
         u1 = User(id='ADMIN00001', username='hungts', password=hashlib.md5('123456'.encode('utf-8')).hexdigest(), name='Do Chi Hung', dob='2003/09/30', sex=0, phone_number='0364623646', email='hungdo29090310@gmail.com', address='125 TMT1', user_role=UserRoleEnum.ADMIN)
 
-        native_airports = [
+        airports = [
             Airport(id='AP00001', name='Tân Sơn Nhất', location='Ho Chi Minh City'),
             Airport(id='AP00002', name='Nội Bài', location='Hà Nội'),
             Airport(id='AP00003', name='Đà Nẵng', location='Đà Nẵng'),
@@ -187,24 +167,56 @@ if __name__ == '__main__':
             Airport(id='AP00007', name='Vinh', location='Nghệ An'),
             Airport(id='AP00008', name='Phù Cát', location='Bình Định'),
             Airport(id='AP00009', name='Chu Lai', location='Quảng Nam'),
-            Airport(id='AP00010', name='Tuy Hòa', location='Phú Yên')
+            Airport(id='AP00010', name='Tuy Hòa', location='Phú Yên'),
+            Airport(id='AF00001', name='Heathrow Airport', location='London, United Kingdom'),
+            Airport(id='AF00002', name='Charles de Gaulle Airport', location='Paris, France'),
+            Airport(id='AF00003', name='Los Angeles International Airport', location='Los Angeles, United States'),
+            Airport(id='AF00004', name='Narita International Airport', location='Tokyo, Japan'),
+            Airport(id='AF00005', name='Dubai International Airport', location='Dubai, United Arab Emirates'),
+            Airport(id='AF00006', name='Sydney Airport', location='Sydney, Australia'),
+            Airport(id='AF00007', name='Singapore Changi Airport', location='Singapore'),
+            Airport(id='AF00008', name='Frankfurt Airport', location='Frankfurt, Germany'),
+            Airport(id='AF00009', name='Incheon International Airport', location='Seoul, South Korea'),
+            Airport(id='AF00010', name='Beijing Capital International Airport', location='Beijing, China')
         ]
 
-        foreign_airports = [
-            Airport(id='APF00001', name='Heathrow Airport', location='London, United Kingdom'),
-            Airport(id='APF00002', name='Charles de Gaulle Airport', location='Paris, France'),
-            Airport(id='APF00003', name='Los Angeles International Airport', location='Los Angeles, United States'),
-            Airport(id='APF00004', name='Narita International Airport', location='Tokyo, Japan'),
-            Airport(id='APF00005', name='Dubai International Airport', location='Dubai, United Arab Emirates'),
-            Airport(id='APF00006', name='Sydney Airport', location='Sydney, Australia'),
-            Airport(id='APF00007', name='Singapore Changi Airport', location='Singapore'),
-            Airport(id='APF00008', name='Frankfurt Airport', location='Frankfurt, Germany'),
-            Airport(id='APF00009', name='Incheon International Airport', location='Seoul, South Korea'),
-            Airport(id='APF00010', name='Beijing Capital International Airport', location='Beijing, China')
+        aircrafts = [
+            Aircraft(id='AC00001', name='Boeing 737', manufacturer='Boeing', capacity=150),
+            Aircraft(id='AC00002', name='Airbus A320', manufacturer='Airbus', capacity=160),
+            Aircraft(id='AC00003', name='Boeing 777', manufacturer='Boeing', capacity=300),
+            Aircraft(id='AC00004', name='Embraer E190', manufacturer='Embraer', capacity=100),
+            Aircraft(id='AC00005', name='Airbus A350', manufacturer='Airbus', capacity=300),
+            Aircraft(id='AC00006', name='Bombardier CRJ900', manufacturer='Bombardier', capacity=90),
+            Aircraft(id='AC00007', name='Boeing 747', manufacturer='Boeing', capacity=400),
+            Aircraft(id='AC00008', name='Airbus A380', manufacturer='Airbus', capacity=550),
+            Aircraft(id='AC00009', name='McDonnell Douglas MD-11', manufacturer='McDonnell Douglas', capacity=290),
+            Aircraft(id='AC00010', name='ATR 72', manufacturer='ATR', capacity=70)
         ]
 
-        db.session.add_all(native_airports)
-        db.session.add_all(foreign_airports)
+        routes = []
+        for i in range(len(airports) - 1):
+            for j in range(len(airports)):
+                route = Route(
+                    id=f"Route_{airports[i].id}_{airports[j].id}",
+                    departure_airport_id=airports[i].id,
+                    arrival_airport_id=airports[j].id
+                )
+                routes.append(route)
+
+        db.session.add_all(airports)
+        db.session.add_all(routes)
+        db.session.commit()
+
+        flights = [
+            Flight(id='F00000', route='Route_AF00001_AF00001', aircraft='AC00001')
+        ]
+        # Hiển thị các tuyến bay đã tạo
+        # for route in routes:
+        #     print(route.id, route.departure_airport_id, route.arrival_airport_id, next((airport for airport in airports if airport.id == route.departure_airport_id), None).name)
+        # db.session.add_all(airports)
+        # db.session.add_all(routes)
+        db.session.add_all(aircrafts)
+        db.session.add_all(flights)
         db.session.add(u1)
         db.session.commit()
 

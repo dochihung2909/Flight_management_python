@@ -3,7 +3,7 @@ from flask_login import logout_user, current_user
 from flask_admin.contrib.sqla import ModelView
 from flask import redirect, request
 from app import app, dao, db
-from app.models import UserRoleEnum, User
+from app.models import UserRoleEnum, User, Flight, Route, Airport, Aircraft
 
 class MyAdmin(AdminIndexView):
     @expose('/')
@@ -15,7 +15,12 @@ admin = Admin(app=app, name='Quản lý chuyến bay', template_mode='bootstrap4
 
 class AuthenticatedAdmin(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated and current_user.account_role == UserRoleEnum.ADMIN
+        return current_user.is_authenticated and current_user.user_role == UserRoleEnum.ADMIN
+
+
+class AuthenticatedEmployee(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated and (current_user.user_role == UserRoleEnum.EMPLOYEE or current_user.user_role == UserRoleEnum.ADMIN)
 
 
 class AuthenticatedUser(BaseView):
@@ -31,5 +36,21 @@ class LogoutView(AuthenticatedUser):
         return redirect('/admin')
 
 
-admin.add_view(ModelView(User, db.session))
+class RouteViewModel(AuthenticatedEmployee):
+    column_list = ('id', 'departure_airport.name', 'arrival_airport.name')
+    column_labels = {
+        'departure_airport.name': 'Departure Airport',
+        'arrival_airport.name': 'Arrival Airport'
+    }
+
+class FlightViewModel(AuthenticatedEmployee):
+    column_list = ('id', 'departure_time', 'time_flight', 'route', 'aircraft')
+    column_labels = {
+    }
+
+admin.add_view(FlightViewModel(Flight, db.session))
+admin.add_view(AuthenticatedEmployee(Aircraft, db.session))
+admin.add_view(AuthenticatedEmployee(Airport, db.session))
+admin.add_view(RouteViewModel(Route, db.session))
+
 admin.add_view(LogoutView(name='Đăng Xuất'))

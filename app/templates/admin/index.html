@@ -18,24 +18,23 @@
 
 {% extends 'admin/master.html' %}
 
-{% block page_body %}
-<div class="container mt-5">
-
-        {% if current_user.is_authenticated %}
-            <h1 class="text-center text-info">CHÀO MỪNG BẠN ĐẾN VỚI TRANG QUẢN TRỊ</h1>
-        {% else %}
-            <h1 class="text-center text-info">ĐĂNG NHẬP TRANG QUẢN TRỊ</h1>
-            <form method="post" action="/admin/login">
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Username</label>
-                <input name="username" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input name="password" type="password" class="form-control" id="exampleInputPassword1">
-              </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+{% block body %}
+        <div class="container mt-5">
+            {% if current_user.is_authenticated %}
+                <h1 class="text-center text-info">CHÀO MỪNG BẠN ĐẾN VỚI TRANG QUẢN TRỊ</h1>
+            {% else %}
+                <h1 class="text-center text-info">ĐĂNG NHẬP TRANG QUẢN TRỊ</h1>
+                <form method="post" action="/admin/login">
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Username</label>
+                    <input name="username" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input name="password" type="password" class="form-control" id="exampleInputPassword1">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
         </div>
       {% endif %}
 {% endblock %}
