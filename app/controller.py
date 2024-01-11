@@ -11,7 +11,6 @@ import math
 def home():
     airports = dao.get_all_airport()
     seat_types = dao.get_all_seat_type()
-    print(dao.get_aircraft(kw='Boeing 737')[0])
     return render_template('frontpage.html', airports=airports, seat_types=seat_types)
 
 
@@ -31,27 +30,49 @@ def creae_schedule():
 
 
 def add_flight():
-    data = request.form
+    try:
+        data = request.json
+        print(data, dao.get_airport(kw=data.get('departure_airport')))
+        route_flight = dao.find_route(dao.get_airport(kw=data.get('departure_airport'))[0],
+                                      dao.get_airport(kw=data.get('arrival_airport'))[0]).id
+        print(route_flight)
+        if route_flight:
+            time_flight = datetime.time(int(data.get('flight_hours')), int(data.get('flight_minutes')))
+            aircraft = dao.get_aircraft(kw=data.get('aircraft'))[0]
+            print(aircraft)
+            business_seats = math.trunc(aircraft.capacity * (1 / 3))
 
-    route_flight = dao.find_route(dao.get_airport(name=data.get('departure_airport'))[0], dao.get_airport(name=data.get('arrival_airport'))[0]).id
-    print(route_flight)
-    if route_flight:
-        time_flight = datetime.time(int(data.get('flight_hours')), int(data.get('flight_minutes')))
-        aircraft = dao.get_aircraft(kw=data.get('aircraft'))[0]
+            economy_seats = aircraft.capacity - business_seats
+            flight = {
+                'departure_time': data.get('departure_time'),
+                'time_flight': time_flight,
+                'route': route_flight,
+                'aircraft': aircraft.id,
+                'economy_seats': economy_seats,
+                'business_seats': business_seats
+            }
+            print(flight)
+            dao.add_flight(flight)
+    except Exception as ex:
+        print(ex)
+        return jsonify({'status': 500, 'err_msg': 'Something wrong!'})
+    else:
+        return jsonify({'status': 200, 'flight_id': f'F{dao.count_flight():05d}'})
 
-        business_seats = math.trunc(aircraft.capacity * (1/3))
 
-        economy_seats = aircraft.capacity - business_seats
-        flight = {
-            'departure_time': data.get('departure_time'),
-            'time_flight': time_flight,
-            'route': route_flight,
-            'aircraft': aircraft.id,
-            'economy_seats': economy_seats,
-            'business_seats': business_seats
-        }
-        print(flight)
-        if dao.add_flight(flight):
-            return jsonify({'status': 200})
+def show_flight():
+    try:
+        data = request.json
 
-    return jsonify({'status': 500, 'err_msg': 'Something wrong!'})
+        start_date = data.get('start')
+        route_flight = dao.find_route(dao.get_airport(kw=data.get('departure_airport'))[0],
+                                      dao.get_airport(kw=data.get('arrival_airport'))[0]).id
+
+        flights = dao.get_flights(route_id=route_flight, start_date=start_date)
+
+
+    except Exception as ex:
+        print(ex)
+        return jsonify({'status': 500, 'err_msg': 'Something wrong!'})
+    else:
+        return jsonify({'status': 200}, flights=flights)

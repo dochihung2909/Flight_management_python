@@ -30,6 +30,8 @@ def add_flight(flight):
         f = Flight(id=flight_id, departure_time=flight.get('departure_time'), time_flight=flight.get('time_flight'), economy_seats=flight.get('economy_seats'), business_seats=flight.get('business_seats'), route=flight.get('route'), aircraft=flight.get('aircraft'))
         db.session.add(f)
         db.session.commit()
+        return f
+
 
 def get_all_route():
     routes = Route.query
@@ -50,13 +52,24 @@ def get_aircraft(kw = None):
 
     return aircrafts.all()
 
-def get_airport(name = None):
+
+def get_airport(kw = None):
     airports = Airport.query
+    if kw:
+        airports = airports.filter((Airport.name + " " + Airport.location).contains(kw))
 
-    if name:
-        airports = airports.filter(Airport.name.__eq__(name))
+    return airports.all()
 
-    return airports
 
 def count_flight():
     return db.session.query(Flight.id).count()
+
+
+def get_flights(route_id = None, start_date = None, end_date = None):
+    flights = Flight.query()
+
+    if route_id:
+        flights = flights.filter(Flight.route.__eq__(route_id) and Flight.departure_time.__eq__(start_date) or Flight.departure_time < start_date)
+
+    return flights.all()
+
