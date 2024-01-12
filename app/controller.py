@@ -5,7 +5,7 @@ from flask import render_template, request, redirect, jsonify
 
 from flask_login import login_user
 
-from datetime import datetime
+from datetime import datetime, time
 
 import math
 
@@ -40,7 +40,7 @@ def add_flight():
                                           dao.get_airport(kw=data.get('arrival_airport'))[0]).id
             print(route_flight)
             if route_flight:
-                time_flight = datetime.time(int(data.get('flight_hours')), int(data.get('flight_minutes')))
+                time_flight = time(int(data.get('flight_hours')), int(data.get('flight_minutes')))
                 aircraft = dao.get_aircraft(kw=data.get('aircraft'))[0]
                 print(aircraft)
                 business_seats = math.trunc(aircraft.capacity * (1 / 3))
