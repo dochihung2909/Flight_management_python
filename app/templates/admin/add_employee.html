@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin page</title>
+</head>
+
+
+{% extends 'admin/master.html' %}
+
+{% block body %}
+
+    <h1 class="mt-4 text-center">
+        Tạo Nhân Viên
+    </h1>
+
+    <form id="employee_form" class="container pt-4">
+        <div class="form-group">
+            <label for="name_user">Họ và Tên</label>
+            <input type="text" class="form-control" name="name_user" id="name_user" required aria-describedby="emailHelp" placeholder="Nguyễn Văn A">
+        </div>
+        <div class="form-group">
+            <label for="username">Tên đăng nhập</label>
+            <input type="text" class="form-control" name="username" id="username" required aria-describedby="emailHelp" placeholder="user123">
+        </div>
+        <div class="form-group">
+            <label for="password">Mật khẩu</label>
+            <input type="password" class="form-control" name="password" id="password" required aria-describedby="emailHelp" placeholder="••••••••">
+        </div>
+            <div class="form-group">
+            <label for="re_password">Nhập lại mật khẩu</label>
+            <input type="password" class="form-control" name="re_password" id="re_password" required placeholder="••••••••">
+            <span class="py-4 text-danger" id="error">
+            </span>
+            <span class="py-4 text-success" id="success">
+            </span>
+        </div>
+      <button type="submit" class="w-100 btn btn-primary">Tạo nhân viên</button>
+    </form>
+
+
+    <script>
+        document.getElementById('employee_form').addEventListener('submit', function (e) {
+            e.preventDefault()
+
+            let pass = password.value
+            let re_pass = re_password.value
+            let error = document.getElementById('error')
+            if (pass != re_pass) {
+                error.innerText = 'Mật khẩu nhập lại không đúng!'
+            } else {
+                error.innerText = ''
+            }
+
+            fetch('/admin/employee', {
+                    method: 'post',
+                    body: JSON.stringify({
+                        'name': name_user.value,
+                        'username': username.value,
+                        'password': pass,
+                        're_password': re_pass
+                    }),
+                    headers: {
+                        'Content-Type': "application/json"
+                    }
+                }
+                ).then(function (res) {
+                    return res.json()
+                }).then(function (data) {
+                    if (data.status == '200') {
+                        console.log('Successful add employee')
+                        document.getElementById('success').innerText = 'Thêm người dùng thành công'
+                        document.getElementById('employee_form').reset()
+                    } else if (data.status == '403') {
+                        error.innerHTML += `<br> ${data.message}`
+                    }
+                })
+        })
+    </script>
+
+{% endblock %}

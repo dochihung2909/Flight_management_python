@@ -13,7 +13,7 @@ class MyAdmin(AdminIndexView):
 admin = Admin(app=app, name='Quản lý chuyến bay', template_mode='bootstrap4', index_view=MyAdmin())
 
 
-class AuthenticatedAdmin(ModelView):
+class AuthenticatedAdmin(BaseView):
     def is_accessible(self):
         return current_user.is_authenticated and current_user.user_role == UserRoleEnum.ADMIN
 
@@ -48,9 +48,15 @@ class FlightViewModel(AuthenticatedEmployee):
     column_labels = {
     }
 
+class EmployeeAdd(AuthenticatedAdmin):
+    @expose('/')
+    def index(self):
+        return self.render('admin/add_employee.html', )
+
 admin.add_view(FlightViewModel(Flight, db.session))
 admin.add_view(AuthenticatedEmployee(Aircraft, db.session))
 admin.add_view(AuthenticatedEmployee(Airport, db.session))
 admin.add_view(RouteViewModel(Route, db.session))
+admin.add_view(EmployeeAdd(name='Thêm nhân viên', endpoint='add_employee'))
 
 admin.add_view(LogoutView(name='Đăng Xuất'))

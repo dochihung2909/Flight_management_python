@@ -1,5 +1,5 @@
 import hashlib
-from app.models import User, Airport, SeatRoleEnum, Flight, Route, Aircraft
+from app.models import User, Airport, SeatRoleEnum, Flight, Route, Aircraft, UserRoleEnum
 from app import db, dao
 from sqlalchemy import cast, Date
 import datetime, time
@@ -11,6 +11,9 @@ def auth_user(username, password):
     return User.query.filter(User.username.__eq__(username),
                              User.password.__eq__(password)).first()
 
+
+def is_username_available(username):
+    return User.query.filter(User.username.__eq__(username)).first()
 
 def get_all_airport():
     airports = Airport.query
@@ -69,6 +72,19 @@ def get_airport(kw = None):
 def count_flight():
     return db.session.query(Flight.id).count()
 
+
+def count_user():
+    return db.session.query(User.id).count()
+
+
+def add_user(user, role = None):
+    u = User(name=user.get('name'),id=user.get('user_id'), username=user.get('username'), password=user.get('password'))
+    if role:
+        u.user_role = role
+    db.session.add(u)
+    db.session.commit()
+
+    return u
 
 def get_flights(route_id = None, start_date = None, end_date = None):
     flights = Flight.query

@@ -2,6 +2,13 @@ from urllib.parse import quote
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_principal import Principal
+
+
+# load the extension
+
+
+
 
 
 app = Flask(__name__)
@@ -12,3 +19,4 @@ app.secret_key = "BG\xeb\xdd\t\xf1\x93\xbeWp\xbb\xffla V"
 
 db = SQLAlchemy(app=app)
 login = LoginManager(app=app)
+principals = Principal(app)

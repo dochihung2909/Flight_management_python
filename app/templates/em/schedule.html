@@ -55,6 +55,20 @@
     </div>
   </div>
 
+    <div class="grid md:grid-cols-2 md:gap-6">
+        <div class="relative z-0 w-full mb-5 group">
+            <input type="number" name="economy_price" id="economy_price" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+            <label for="economy_price" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                Giá vé phổ thông
+            </label>
+        </div>
+        <div class="relative z-0 w-full mb-5 group">
+            <input type="number" name="business_price" id="business_price" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+            <label for="business_price" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                Giá vé thương gia
+            </label>
+        </div>
+    </div>
   <div class="relative z-0 w-full mb-5 group">
         <input type="datetime-local" name="departure_time" id="departure_time" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
         <label for="departure_time" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
@@ -100,13 +114,28 @@
             </div>
         </div>
     </div>
+    <div id="airport_container" class="">
+        <div class="relative z-0 w-full mb-5 group">
+            <input type="text" name="stop_airport_1" id="stop_airport_1" class="airport_block block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+            <label for="stop_airport_1" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                Sân bay trung gian 1
+            </label>
+        </div>
+
+        <div class="relative z-0 w-full mb-5 group">
+            <input type="text" name="stop_airport_2" id="stop_airport_2" class="airport_block block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+            <label for="stop_airport_2" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                Sân bay trung gian 2
+            </label>
+        </div>
+  </div>
     <div class="flex">
         <button type="submit" class="flex-1 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Thêm chuyến bay</button>
     </div>
 </form>
 
-<div class="flex justify-center m-5 none">
-    <button id="successButton" data-modal-target="successModal" data-modal-toggle="successModal" class="block text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" type="button">
+<div class="flex justify-center m-5 hidden">
+    <button id="successButton" data-modal-target="successModal" data-modal-toggle="successModal" class="block text-black bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" type="button">
         Show success message
     </button>
 </div>
@@ -136,10 +165,15 @@
     document.addEventListener("DOMContentLoaded", function(event) {
       document.getElementById('successButton').click();
     });
+
+    let airprort_number = 2
+
     let form = document.getElementById('form_schedule')
     form.addEventListener('submit', function(e) {
         e.preventDefault()
         console.log(arrival_airport.innerText, departure_airport.innerText, aircraft.innerText)
+
+
         fetch('/api/flight', {
             method: 'post',
             body: JSON.stringify({
@@ -148,7 +182,11 @@
                 'flight_minutes': flight_minutes.value,
                 'departure_airport': departure_airport.value,
                 'arrival_airport': arrival_airport.value,
-                'aircraft': aircraft.value
+                'aircraft': aircraft.value,
+                'economy_price': economy_price.value,
+                'business_price': business_price.value,
+                'stop_airport_1': stop_airport_1.value,
+                'stop_airport_2': stop_airport_2.value
             }),
             headers: {
                 'Content-Type': "application/json"
@@ -190,8 +228,22 @@
             select: function (e, ui) {},
         });
 
+        $('#stop_airport_1').autocomplete({
+            source: availableTags,
+            select: function (e, ui) {},
+            change: function( event, ui ) {}
+        })
+
         $('#aircraft').autocomplete({
             source: availableAircrafts
+        })
+
+        $('#stop_airport_1').on('autocompletechange', function (e, ui) {
+            availableStopAirports = availableTags.filter((airporot) => airporot != this.value)
+
+            $('#stop_airport_2').autocomplete({
+                source: availableStopAirports
+            })
         })
 
         $( "#departure_airport" ).on('autocompleteselect', function( e, ui ) {
