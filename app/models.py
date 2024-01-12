@@ -203,20 +203,13 @@ if __name__ == '__main__':
                 )
                 routes.append(route)
 
-        db.session.add_all(airports)
-        db.session.add_all(routes)
-        db.session.commit()
 
-        flights = [
-            Flight(id='F00000', route='Route_AF00001_AF00001', aircraft='AC00001')
-        ]
         # Hiển thị các tuyến bay đã tạo
         # for route in routes:
         #     print(route.id, route.departure_airport_id, route.arrival_airport_id, next((airport for airport in airports if airport.id == route.departure_airport_id), None).name)
-        # db.session.add_all(airports)
-        # db.session.add_all(routes)
+        db.session.add_all(airports)
+        db.session.add_all(routes)
         db.session.add_all(aircrafts)
-        db.session.add_all(flights)
         db.session.add(u1)
         db.session.commit()
 

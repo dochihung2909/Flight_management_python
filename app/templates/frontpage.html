@@ -134,7 +134,7 @@
                 </div>
 
                 <div class="self-end flex bg-orange-500 rounded-[20px] border-[4px] border-gray-200">
-                    <button type="submit"
+                    <button id="submit_form_btn" onclick="search_flight()" type="submit"
                             class="flex w-full gap-[8px] h-[50px] items-center justify-center">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                              data-id="IcSystemSearch">
@@ -151,10 +151,7 @@
 
         <!-- component -->
         <div id="flight_container" class="">
-
         </div>
-
-
     </div>
 
 
@@ -190,7 +187,9 @@
         booking_form.addEventListener('submit', function (e) {
             e.preventDefault()
 
-            search_flight()
+            let formData = new FormData(booking_form)
+            let queryString = new URLSearchParams(formData).toString();
+            search_flight(queryString)
         })
 
     </script>

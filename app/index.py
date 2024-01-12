@@ -11,8 +11,7 @@ from app import app, controller, dao, db, login
 app.add_url_rule('/', 'homepage', controller.home)
 app.add_url_rule('/admin/login', 'admin_login', controller.login_page, methods=['POST'])
 app.add_url_rule('/em/schedule', 'employee_schedule', controller.creae_schedule)
-app.add_url_rule('/api/flight', 'add_flight', controller.add_flight, methods=['POST'])
-app.add_url_rule('/api/flight', 'show_flight', controller.show_flight, methods=['GET'])
+app.add_url_rule('/api/flight', 'add_flight', controller.add_flight, methods=['POST', 'GET'])
 
 @login.user_loader
 def get_user(user_id):

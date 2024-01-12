@@ -1,6 +1,8 @@
 import hashlib
 from app.models import User, Airport, SeatRoleEnum, Flight, Route, Aircraft
 from app import db, dao
+from sqlalchemy import cast, Date
+import datetime, time
 
 
 def auth_user(username, password):
@@ -37,10 +39,13 @@ def get_all_route():
     routes = Route.query
     return routes.all()
 
-def find_route(departure_airport, arrival_airport):
+def find_route(departure_airport = None, arrival_airport = None, id = None):
     routes = Route.query
+    if (departure_airport and arrival_airport):
+        routes = routes.filter(Route.departure_airport == departure_airport, Route.arrival_airport == arrival_airport)
+    if id:
+        routes = routes.filter(Route.id.__eq__(id))
 
-    routes = routes.filter(Route.departure_airport == departure_airport and Route.arrival_airport == arrival_airport)
     return routes.all()[0]
 
 
@@ -66,10 +71,23 @@ def count_flight():
 
 
 def get_flights(route_id = None, start_date = None, end_date = None):
-    flights = Flight.query()
+    flights = Flight.query
 
     if route_id:
-        flights = flights.filter(Flight.route.__eq__(route_id) and Flight.departure_time.__eq__(start_date) or Flight.departure_time < start_date)
+        flights = flights.filter(Flight.route.__eq__(route_id), Flight.departure_time.cast(Date) == start_date)
 
     return flights.all()
 
+
+def serialize_datetime(obj):
+    if isinstance(obj, datetime.datetime):
+        return obj.isoformat()
+    raise TypeError("Type not serializable")
+
+def custom_serializer(obj):
+    if isinstance(obj, datetime.datetime):
+        return obj.strftime('%Y-%m-%d %H:%M:%S')
+    elif isinstance(obj, datetime.time):
+        return obj.strftime('%H:%M:%S')
+    else:
+        raise TypeError("Type not serializable")
