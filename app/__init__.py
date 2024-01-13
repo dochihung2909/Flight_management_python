@@ -5,12 +5,6 @@ from flask_login import LoginManager
 from flask_principal import Principal
 
 
-# load the extension
-
-
-
-
-
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:%s@localhost/flightmanagement?charset=utf8mb4" % quote('!Tinhyeu123')

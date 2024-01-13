@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from app import db, app
 import enum
 import datetime
-
+import sqlalchemy
 
 class UserRoleEnum(enum.Enum):
     CUSTOMER = 1
@@ -134,6 +134,9 @@ class Policy(BaseModel):
 
 if __name__ == '__main__':
     with app.app_context():
+        engine = sqlalchemy.create_engine('mysql+pymysql://root:!Tinhyeu123@localhost')
+        engine.execute("CREATE DATABASE IF NOT EXISTS flightmanagement")
+
         db.create_all()
         import hashlib
         u1 = User(id='ADMIN00001', username='hungts', password=hashlib.md5('123456'.encode('utf-8')).hexdigest(), name='Do Chi Hung', dob='2003/09/30', sex=0, phone_number='0364623646', email='hungdo29090310@gmail.com', address='125 TMT1', user_role=UserRoleEnum.ADMIN)
