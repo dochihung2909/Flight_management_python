@@ -69,6 +69,7 @@ class Airport(BaseModel):
 class Route(BaseModel):
     __tablename__ = 'route'
 
+    name = Column(String(500))
     departure_airport_id = Column(String(50), ForeignKey(Airport.id))
     arrival_airport_id = Column(String(50), ForeignKey(Airport.id))
     departure_airport = relationship('Airport', foreign_keys=[departure_airport_id])
@@ -115,9 +116,20 @@ class StopAirport(db.Model):
 
     flight_id = Column(String(50), ForeignKey(Flight.id), primary_key=True)
     airport_id = Column(String(50), ForeignKey(Airport.id), primary_key=True)
-    minimum_time = Column(Integer)
-    maximum_time = Column(Integer)
-    note = Column(String(50))
+    stop_time = Column(Integer)
+    note = Column(String(500))
+
+
+class Policy(BaseModel):
+    __tablename__ = 'flight_policy'
+
+    airport_number = Column(Integer)
+    time_flight_limit = Column(Integer)
+    stop_airport_max_number = Column(Integer)
+    stop_time_minimum = Column(Integer)
+    stop_time_maximum = Column(Integer)
+    time_book_ticket = Column(Integer)
+    time_sell_ticket = Column(Integer)
 
 
 if __name__ == '__main__':
@@ -132,11 +144,11 @@ if __name__ == '__main__':
             Airport(id='AP00003', name='Đà Nẵng', location='Đà Nẵng'),
             Airport(id='AP00004', name='Cam Ranh', location='Khánh Hòa'),
             Airport(id='AP00006', name='Cần Thơ', location='Cần Thơ'),
-            Airport(id='AF00001', name='Heathrow Airport', location='London, United Kingdom'),
-            Airport(id='AF00002', name='Charles de Gaulle Airport', location='Paris, France'),
-            Airport(id='AF00003', name='Los Angeles International Airport', location='Los Angeles, United States'),
-            Airport(id='AF00004', name='Narita International Airport', location='Tokyo, Japan'),
-            Airport(id='AF00006', name='Sydney Airport', location='Sydney, Australia'),
+            Airport(id='AF00001', name='Heathrow Airport', location='London'),
+            Airport(id='AF00002', name='Charles de Gaulle Airport', location='Paris'),
+            Airport(id='AF00003', name='Los Angeles International Airport', location='Los Angeles'),
+            Airport(id='AF00004', name='Narita International Airport', location='Tokyo'),
+            Airport(id='AF00006', name='Sydney Airport', location='Sydney'),
         ]
 
         aircrafts = [
@@ -147,20 +159,25 @@ if __name__ == '__main__':
             Aircraft(id='AC00010', name='ATR 72', manufacturer='ATR', capacity=70)
         ]
 
+        p1 = Policy(id='P00001', airport_number=10, time_flight_limit=30, stop_airport_max_number=2, stop_time_minimum=20, stop_time_maximum=30, time_book_ticket=12, time_sell_ticket=4)
+
         routes = []
         for i in range(len(airports) - 1):
             for j in range(len(airports)):
-                route = Route(
-                    id=f"Route_{airports[i].id}_{airports[j].id}",
-                    departure_airport_id=airports[i].id,
-                    arrival_airport_id=airports[j].id
-                )
-                routes.append(route)
+                if airports[i].id != airports[j].id:
+                    route = Route(
+                        id=f"Route_{airports[i].id}_{airports[j].id}",
+                        name=f'{airports[i].location} - {airports[j].location}',
+                        departure_airport_id=airports[i].id,
+                        arrival_airport_id=airports[j].id
+                    )
+                    routes.append(route)
 
 
         # Hiển thị các tuyến bay đã tạo
         # for route in routes:
         #     print(route.id, route.departure_airport_id, route.arrival_airport_id, next((airport for airport in airports if airport.id == route.departure_airport_id), None).name)
+        db.session.add(p1)
         db.session.add_all(airports)
         db.session.add_all(routes)
         db.session.add_all(aircrafts)

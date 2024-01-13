@@ -22,7 +22,7 @@
     Lập lịch chuyến bay
 </h1>
 
-<form id="form_schedule" class="" action="{{ url_for('add_flight') }}" method="post">
+<form  id="form_schedule" class="" action="{{ url_for('add_flight') }}" method="post">
   <div class="relative z-0 w-full mb-5 group">
       <input type="text" disabled name="flight_id" id="flight_id" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value="{{ flight_id }}" />
       <label for="flight_id" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
@@ -57,20 +57,20 @@
 
     <div class="grid md:grid-cols-2 md:gap-6">
         <div class="relative z-0 w-full mb-5 group">
-            <input type="number" name="economy_price" id="economy_price" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+            <input autocomplete="off" type="number" name="economy_price" id="economy_price" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
             <label for="economy_price" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                 Giá vé phổ thông
             </label>
         </div>
         <div class="relative z-0 w-full mb-5 group">
-            <input type="number" name="business_price" id="business_price" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+            <input autocomplete="off"  type="number" name="business_price" id="business_price" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
             <label for="business_price" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                 Giá vé thương gia
             </label>
         </div>
     </div>
   <div class="relative z-0 w-full mb-5 group">
-        <input type="datetime-local" name="departure_time" id="departure_time" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+        <input autocomplete="off" type="datetime-local" name="departure_time" id="departure_time" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
         <label for="departure_time" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
             Ngày giờ
         </label>
@@ -84,7 +84,7 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                     </svg>
                 </button>
-                <input name="flight_hours" type="text" id="flight_hours" data-input-counter data-input-counter-min="0" data-input-counter-max="24" aria-describedby="helper-text-explanation" class="pb-6 bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" value="0" required>
+                <input autocomplete="off" name="flight_hours" type="text" id="flight_hours" data-input-counter data-input-counter-min="0" data-input-counter-max="24" aria-describedby="helper-text-explanation" class="pb-6 bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" value="0" required>
                 <div class="absolute bottom-1 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 flex items-center text-xs text-gray-400 space-x-1 rtl:space-x-reverse">
                     <span>Giờ</span>
                 </div>
@@ -102,7 +102,7 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                     </svg>
                 </button>
-                <input name="flight_minutes" type="text" id="flight_minutes" data-input-counter data-input-counter-min="0" data-input-counter-max="60" aria-describedby="helper-text-explanation" class="pb-6 bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" value="30" required>
+                <input autocomplete="off" name="flight_minutes" type="text" id="flight_minutes" data-input-counter data-input-counter-min="0" data-input-counter-max="60" aria-describedby="helper-text-explanation" class="pb-6 bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" value="30" required>
                 <div class="absolute bottom-1 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 flex items-center text-xs text-gray-400 space-x-1 rtl:space-x-reverse">
                     <span>Phút</span>
                 </div>
@@ -114,21 +114,8 @@
             </div>
         </div>
     </div>
-    <div id="airport_container" class="">
-        <div class="relative z-0 w-full mb-5 group">
-            <input type="text" name="stop_airport_1" id="stop_airport_1" class="airport_block block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
-            <label for="stop_airport_1" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                Sân bay trung gian 1
-            </label>
-        </div>
-
-        <div class="relative z-0 w-full mb-5 group">
-            <input type="text" name="stop_airport_2" id="stop_airport_2" class="airport_block block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
-            <label for="stop_airport_2" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                Sân bay trung gian 2
-            </label>
-        </div>
-  </div>
+    <div id="stop_airport_container" class="">
+    </div>
     <div class="flex">
         <button type="submit" class="flex-1 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Thêm chuyến bay</button>
     </div>
@@ -164,98 +151,151 @@
  <script>
     document.addEventListener("DOMContentLoaded", function(event) {
       document.getElementById('successButton').click();
-    });
 
-    let airprort_number = 2
-
-    let form = document.getElementById('form_schedule')
-    form.addEventListener('submit', function(e) {
-        e.preventDefault()
-        console.log(arrival_airport.innerText, departure_airport.innerText, aircraft.innerText)
-
-
-        fetch('/api/flight', {
-            method: 'post',
-            body: JSON.stringify({
-                'departure_time': departure_time.value,
-                'flight_hours': flight_hours.value,
-                'flight_minutes': flight_minutes.value,
-                'departure_airport': departure_airport.value,
-                'arrival_airport': arrival_airport.value,
-                'aircraft': aircraft.value,
-                'economy_price': economy_price.value,
-                'business_price': business_price.value,
-                'stop_airport_1': stop_airport_1.value,
-                'stop_airport_2': stop_airport_2.value
-            }),
-            headers: {
-                'Content-Type': "application/json"
-            }
+      let stop_airport_num = {{ Policy.stop_airport_max_number }}
+      let stop_airport_container =  document.getElementById('stop_airport_container')
+        for (let i = 1;i<=stop_airport_num;i++) {
+            stop_airport_container.innerHTML += `
+                <div class="grid grid-cols-5 md:gap-6 mb-5 items-end airport_block">
+                    <div class="col-span-2 relative z-0 w-full mb-5 group">
+                        <input autocomplete="off" type="text" name="stop_airport_${i}" id="stop_airport_${i}" class="airport_name block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+                        <label for="stop_airport_${i}" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                            Sân bay trung gian ${i}
+                        </label>
+                    </div>
+                    <div class="col-span-1 relative flex items-center">
+                        <button type="button" id="decrement-minute-button" data-input-counter-decrement="stop_airport_${i}_stop_time" class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                            <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
+                            </svg>
+                        </button>
+                        <input autocomplete="off" name="stop_airport_${i}_stop_time" type="text" id="stop_airport_${i}_stop_time" data-input-counter data-input-counter-min="{{ Policy.stop_time_minimum }}" data-input-counter-max="{{ Policy.stop_time_maximum }}" aria-describedby="helper-text-explanation" class="stop_time pb-6 bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" value="20">
+                        <div class="absolute bottom-1 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 flex items-center text-xs text-gray-400 space-x-1 rtl:space-x-reverse">
+                            <span>Phút</span>
+                        </div>
+                        <button type="button" id="increment-minute-button" data-input-counter-increment="stop_airport_${i}_stop_time" class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                            <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="col-span-2 ">
+                        <label for="stop_airport_${i}_note" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ghi chú</label>
+                        <textarea maxlength="500" id="stop_airport_${i}_note" name="stop_airport_${i}_note" rows="2" class="stop_airport_note block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ghi chú trạm dừng..."></textarea>
+                    </div>
+                </div>
+            `
         }
-        )
-            .then(function (res) {
-                return res.json()
+        $( function() {
+            var availableTags = [
+                {% for p in airports %}
+                    "{{p.name}}" + " {{ p.location }}",
+                {% endfor %}
+            ];
+
+            let availableAircrafts = [
+                {% for p in aircrafts %}
+                    "{{ p.name }}",
+                {% endfor %}
+            ]
+
+            let availableStopAirports = availableTags
+
+            $( "#departure_airport" ).autocomplete({
+                source: availableStopAirports,
+                select: function (e, ui) {},
+                change: function( event, ui ) {}
+            });
+
+            $( "#arrival_airport" ).autocomplete({
+                source: availableStopAirports,
+                select: function (e, ui) {},
+            });
+
+            $('#aircraft').autocomplete({
+                source: availableAircrafts
             })
-            .then(function (data) {
-                if (data.status == 200) {
-                    document.getElementById('successButton').click();
-                    document.getElementById('form_schedule').reset()
-                    document.getElementById('flight_id').value = data.flight_id
-                }
+
+            $('#stop_airport_1').autocomplete({
+                source: availableTags,
+                select: function (e, ui) {},
+                change: function( event, ui ) {}
             })
-        })
-
-    $( function() {
-        var availableTags = [
-            {% for p in airports %}
-                "{{p.name}}" + " {{ p.location }}",
-            {% endfor %}
-        ];
-
-        let availableAircrafts = [
-            {% for p in aircrafts %}
-                "{{ p.name }}",
-            {% endfor %}
-        ]
-
-        $( "#departure_airport" ).autocomplete({
-            source: availableTags,
-            select: function (e, ui) {},
-            change: function( event, ui ) {}
-        });
-        $( "#arrival_airport" ).autocomplete({
-            source: availableTags,
-            select: function (e, ui) {},
-        });
-
-        $('#stop_airport_1').autocomplete({
-            source: availableTags,
-            select: function (e, ui) {},
-            change: function( event, ui ) {}
-        })
-
-        $('#aircraft').autocomplete({
-            source: availableAircrafts
-        })
-
-        $('#stop_airport_1').on('autocompletechange', function (e, ui) {
-            availableStopAirports = availableTags.filter((airporot) => airporot != this.value)
 
             $('#stop_airport_2').autocomplete({
-                source: availableStopAirports
+                source: availableTags
             })
+
+            $('#stop_airport_1').on('autocompletechange', function (e, ui) {
+                availableStopAirports = availableTags.filter((airport) => (airport != this.value && airport != departure_airport.value && airport != arrival_airport.value))
+                console.log(availableStopAirports)
+                $('#stop_airport_2').autocomplete( "option", "source", availableStopAirports)
+            })
+
+            $( "#departure_airport" ).on('autocompletechange', function( e, ui ) {
+                availableStopAirports = availableTags.filter((airport) => (airport != this.value))
+                console.log(availableStopAirports)
+                $( "#arrival_airport" ).autocomplete( "option", "source", availableStopAirports)
+            })
+
+            $( "#arrival_airport" ).on('autocompletechange', function( e, ui ) {
+                availableStopAirports = availableTags.filter((airport) => (airport != this.value && airport != departure_airport.value))
+                console.log(availableStopAirports)
+                $('#stop_airport_1').autocomplete( "option", "source", availableStopAirports)
+            })
+        } );
+
+
+
+        let form = document.getElementById('form_schedule')
+        form.addEventListener('submit', function(e) {
+            e.preventDefault()
+            console.log(arrival_airport.value, departure_airport.value, aircraft.value, departure_time.value, economy_price.value, business_price.value)
+            let stop_airports_element = document.querySelectorAll('.airport_block')
+            stop_airports = []
+            stop_airports_element.forEach((airport) => {
+                if (airport.querySelector('input.airport_name').value != false)
+                    stop_airports.push({
+                        'name': airport.querySelector('input.airport_name').value,
+                        'stop_time': airport.querySelector('input.stop_time').value,
+                        'note': airport.querySelector('.stop_airport_note').value
+                    })
+            })
+            console.log(stop_airports)
+            fetch('/api/flight', {
+                method: 'post',
+                body: JSON.stringify({
+                    'departure_time': document.getElementById('departure_time').value,
+                    'flight_hours': flight_hours.value,
+                    'flight_minutes': flight_minutes.value,
+                    'departure_airport': departure_airport.value,
+                    'arrival_airport': arrival_airport.value,
+                    'aircraft': aircraft.value,
+                    'economy_price': economy_price.value,
+                    'business_price': business_price.value,
+                    'stop_airports': stop_airports,
+                }),
+                headers: {
+                    'Content-Type': "application/json"
+                }
+            }
+            )
+                .then(function (res) {
+                    return res.json()
+                })
+                .then(function (data) {
+                    if (data.status == 200) {
+                        document.getElementById('successButton').click();
+                        document.getElementById('form_schedule').reset()
+                        document.getElementById('flight_id').value = data.flight_id
+                    }
+                })
         })
-
-        $( "#departure_airport" ).on('autocompleteselect', function( e, ui ) {
-
-        })
-
-        $( "#arrival_airport" ).on('autocompleteselect', function( e, ui ) {
-
-        })
+    });
 
 
-      } );
+
+
 
 
 

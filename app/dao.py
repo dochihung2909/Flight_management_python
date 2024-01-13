@@ -1,5 +1,5 @@
 import hashlib
-from app.models import User, Airport, SeatRoleEnum, Flight, Route, Aircraft, UserRoleEnum
+from app.models import User, Airport, SeatRoleEnum, Flight, Route, Aircraft, UserRoleEnum,Policy, StopAirport
 from app import db, dao
 from sqlalchemy import cast, Date
 import datetime, time
@@ -29,18 +29,29 @@ def get_all_seat_type():
     return seat_types
 
 
-def add_flight(flight):
+def get_route():
+    return Route.query.all()
+
+def get_policy():
+    p = Policy.query.first()
+    return p
+
+
+def add_stopairport(stop_airport, flight_id, airport_id):
+    sa = StopAirport(airport_id=airport_id, flight_id=flight_id, note=stop_airport.get('note'), stop_time=stop_airport.get('stop_time'))
+    if sa:
+        db.session.add(sa)
+        db.session.commit()
+    return sa
+
+
+def add_flight(flight, employee_id):
     if flight:
-        flight_id = f'F{dao.count_flight():05d}'
-        f = Flight(id=flight_id, departure_time=flight.get('departure_time'), time_flight=flight.get('time_flight'), economy_seats=flight.get('economy_seats'), business_seats=flight.get('business_seats'), route=flight.get('route'), aircraft=flight.get('aircraft'))
+        f = Flight(economy_price=flight.get('economy_price'), business_price=flight.get('business_price'),employee_id=employee_id,id=flight.get('flight_id'), departure_time=flight.get('departure_time'), time_flight=flight.get('time_flight'), economy_seats=flight.get('economy_seats'), business_seats=flight.get('business_seats'), route=flight.get('route'), aircraft=flight.get('aircraft'))
         db.session.add(f)
         db.session.commit()
         return f
 
-
-def get_all_route():
-    routes = Route.query
-    return routes.all()
 
 def find_route(departure_airport = None, arrival_airport = None, id = None):
     routes = Route.query
@@ -52,11 +63,14 @@ def find_route(departure_airport = None, arrival_airport = None, id = None):
     return routes.all()[0]
 
 
-def get_aircraft(kw = None):
+def get_aircraft(id = None, kw = None):
     aircrafts = Aircraft.query
 
     if kw:
         aircrafts = aircrafts.filter(Aircraft.name.__eq__(kw))
+    if id:
+        aircrafts = aircrafts.filter(Aircraft.id.__eq__(id)).first()
+        return aircrafts
 
     return aircrafts.all()
 
@@ -86,11 +100,14 @@ def add_user(user, role = None):
 
     return u
 
-def get_flights(route_id = None, start_date = None, end_date = None):
+def get_flights(flight_id = None, route_id = None, start_date = None, end_date = None):
     flights = Flight.query
 
     if route_id:
         flights = flights.filter(Flight.route.__eq__(route_id), Flight.departure_time.cast(Date) == start_date)
+    if flight_id:
+        flights = flights.filter(Flight.id.__eq__(flight_id)).first()
+        return flights
 
     return flights.all()
 

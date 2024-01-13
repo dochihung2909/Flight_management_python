@@ -1,0 +1,93 @@
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+    </script>
+
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+        rel="stylesheet" type="text/css" />
+
+</head>
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <form id="sell_flight_form" method="GET" action="/em/sell_ticket">
+            <div class="grid grid-cols-3 items-center gap-[20px]">
+                <div class="w-full relative">
+                    <label for="route" class="">
+                        Tuyến bay
+                    </label>
+                    <div class="relative mt-2">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg" data-id="IcFlightLanding">
+                                <path d="M3 21H21" stroke="#0194f3" stroke-width="2" stroke-linecap="round"
+                                      stroke-linejoin="round"></path>
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M21 15L7.1263 13.8439C4.79398 13.6495 3 11.6998 3 9.3594V7.5L4.5 10.5H9L7.5 3H8.1L12 10.5L17.3419 11.5684C18.7036 11.8407 19.8632 12.7265 20.4843 13.9685L21 15ZM16.5 17.625L16.875 17.25L17.25 17.625L16.875 18L16.5 17.625Z"
+                                      stroke="#0194f3" stroke-width="2" stroke-linecap="round"
+                                      stroke-linejoin="round"></path>
+                            </svg>
+                        </div>
+                        <input required id="route" name="route" type="text"
+                               class="text-[16px] w-full focus:outline-none border-[4px] border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block ps-10 p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500 datepicker-input"
+                               placeholder="Tuyến bay">
+                    </div>
+                </div>
+
+                <div class="w-full">
+                    <label for="time_flight" class="">
+                        Ngày bay
+                    </label>
+                    <div class="relative w-full mt-2">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                            </svg>
+                        </div>
+                        <input datepicker type="text" name="time_flight" id="time_flight" class="w-full text-[16px] w-full focus:outline-none border-[4px] border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block ps-10 p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500 datepicker-input" placeholder="Select date">
+                    </div>
+                </div>
+
+                <div class="self-end flex bg-orange-500 rounded-[20px] border-[4px] border-gray-200">
+                    <button id="submit_form_btn" onclick="search_flight()" type="submit"
+                            class="flex w-full gap-[8px] h-[50px] items-center justify-center">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                             data-id="IcSystemSearch">
+                            <path d="M15 15L20.5 20.5M10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3C6.13401 3 3 6.13401 3 10C3 13.866 6.13401 17 10 17Z"
+                                  stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"
+                                  stroke-linejoin="round"></path>
+                        </svg>
+                        <span class="text-white">Tìm kiếm chuyến bay</span>
+                    </button>
+                </div>
+
+            </div>
+        </form>
+
+    <script>
+        $( function() {
+        var availableRoutes = [
+            {% for p in routes %}
+                "{{p.name}}",
+            {% endfor %}
+        ];
+
+
+        $( "#route" ).autocomplete({
+            source: availableRoutes,
+            select: function (e, ui) {},
+            change: function( event, ui ) {}
+        });
+
+
+      } );
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/datepicker.min.js"></script>
+{% endblock %}

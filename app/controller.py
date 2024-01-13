@@ -18,7 +18,6 @@ from flask_principal import identity_changed, Identity, AnonymousIdentity
 def home():
     airports = dao.get_all_airport()
     seat_types = dao.get_all_seat_type()
-    print(dao.is_username_available('thina'))
     return render_template('frontpage.html', airports=airports, seat_types=seat_types)
 
 
@@ -26,10 +25,10 @@ def login_page():
     username = request.form.get('username')
     password = request.form.get('password')
     user = dao.auth_user(username, password)
-    identity_changed.send(current_app._get_current_object(),
-                                  identity=Identity(user.id))
+
     if user:
         login_user(user=user)
+        identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
     return redirect('/admin')
 
 
@@ -44,14 +43,27 @@ def employee_page(slug):
     if current_user.user_role != UserRoleEnum.CUSTOMER:
         if (slug == 'schedule'):
             return create_schedule()
+    else:
+        return render_template('/login/index.html')
 
     return 'You do not have permission to access this page', 403
+
+def employee_login():
+    if current_user.is_authenticated and current_user.user_role == UserRoleEnum.EMPLOYEE:
+        return render_template('/em/index.html')
+    return render_template('/login/index.html', title='Đăng nhập tài khoản nhân viên')
+
+
+@login_required
+def sell_ticket():
+    return render_template('/em/sell_ticket.html', routes=dao.get_route())
 
 
 @app.context_processor
 def common_resp():
     return {
-        'UserRole': UserRoleEnum
+        'UserRole': UserRoleEnum,
+        'Policy': dao.get_policy()
     }
 
 def login():
@@ -60,16 +72,22 @@ def login():
             data = request.json
             print(data)
             user = dao.auth_user(data.get('username'), data.get('password'))
-            print(user)
             if user:
                 print('login')
+                if data.get('isEmployee') and user.user_role != UserRoleEnum.EMPLOYEE:
+                    return jsonify({'status': 403, 'message': 'Không tồn tại nhân viên'})
+
                 login_user(user)
                 identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
+            else:
+                return jsonify({'status': 403, 'message': 'Sai tên đăng nhập hoặc mật khẩu'})
 
         except Exception as ex:
             print(ex)
             return jsonify({'status': 500, 'message': 'Something Wrong'})
         else:
+            if (current_user.user_role == UserRoleEnum.EMPLOYEE):
+                return jsonify({'status': 200, 'route': '/em'})
             return jsonify({'status': 200})
 
     return render_template('/login/index.html')
@@ -102,21 +120,13 @@ def signup():
                     'username': data.get('username'),
                     'password': password,
                 }
-                print(user)
-                if (dao.add_user(user)):
-                    user = dao.auth_user(user.get('username'), user.get('password'))
-                    if user:
-                        login_user(user)
-                        identity_changed.send(current_app._get_current_object(),
-                                              identity=Identity(user.id))
-                        redirect('/')
+                dao.add_user(user)
             else:
                 return jsonify({'status': 403, 'message': 'Tên đăng nhập đã tồn tại'})
         except Exception as ex:
             print(ex)
             return jsonify({'status': 500, 'message': 'Something Wrong'})
         else:
-            redirect('/')
             return jsonify({'status': 200})
     else:
 
@@ -155,6 +165,8 @@ def add_flight():
         try:
             data = request.json
             print(data, dao.get_airport(kw=data.get('departure_airport')), dao.get_airport(kw=data.get('arrival_airport')))
+            stop_airports_data = data.get('stop_airports')
+            print(stop_airports_data)
             route_flight = dao.find_route(dao.get_airport(kw=data.get('departure_airport'))[0],
                                           dao.get_airport(kw=data.get('arrival_airport'))[0]).id
             print(route_flight)
@@ -166,15 +178,24 @@ def add_flight():
 
                 economy_seats = aircraft.capacity - business_seats
                 flight = {
+                    'flight_id': f'F{dao.count_flight():05d}',
                     'departure_time': data.get('departure_time'),
                     'time_flight': time_flight,
                     'route': route_flight,
                     'aircraft': aircraft.id,
                     'economy_seats': economy_seats,
-                    'business_seats': business_seats
+                    'business_seats': business_seats,
+                    'economy_price': data.get('economy_price'),
+                    'business_price': data.get('business_price')
                 }
                 print(flight)
-                dao.add_flight(flight)
+                employee_id = current_user.id
+                if dao.add_flight(flight, employee_id):
+                    for stop_airport in stop_airports_data:
+                        airport = dao.get_airport(kw=stop_airport.get('name'))[0]
+                        print(airport.name)
+                        if airport:
+                            dao.add_stopairport(stop_airport, flight_id=flight.get('flight_id'), airport_id=airport.id)
         except Exception as ex:
             print(ex)
             return jsonify({'status': 500, 'err_msg': 'Something wrong!'})
@@ -197,10 +218,41 @@ def add_flight():
                   'departure_time': flight.departure_time,
                   'time_flight': flight.time_flight,
                   'departure_airport': {'name': departure_airport.name, 'location': departure_airport.location},
-                  'arrival_airport': {'name': arrival_airport.name, 'location': arrival_airport.location}
+                  'arrival_airport': {'name': arrival_airport.name, 'location': arrival_airport.location},
+                  'economy_price': flight.economy_price,
+                  'business_price': flight.business_price
                 } for flight in flights])
         except Exception as ex:
             print(ex)
             return jsonify({'status': 500, 'err_msg': 'Something wrong!'})
         else:
             return jsonify({'status': 200, 'flights': json.dumps(flights, default=dao.custom_serializer)})
+
+
+@login_required
+def flight_booking():
+    if request.method == 'POST':
+        data = request.json
+        print(data)
+        flight = dao.get_flights(flight_id=data.get('flight_id'))
+
+        departure_time = str(flight.departure_time)
+        if flight:
+            session['flight'] = {
+                'flight_id': flight.id,
+                'departure_time': data.get('departure_time'),
+                'departure_airport_name': data.get('departure_airport_name'),
+                'departure_airport_location': data.get('departure_airport_location'),
+                'arrival_airport_name': data.get('arrival_airport_name'),
+                'arrival_airport_location': data.get('arrival_airport_location'),
+                'arrival_time': data.get('arrival_time'),
+                'aircraft': flight.aircraft
+            }
+            return jsonify({'status': 200, 'route': '/flight'})
+    else:
+        flight = session.get('flight')
+        if (flight):
+            print(flight)
+            aircraft_name = dao.get_aircraft(id=flight.get('aircraft')).name
+            return render_template('/flight/index.html', flight=flight, aircraft=aircraft_name)
+    return 'You dont have permision to this route'
