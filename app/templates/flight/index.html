@@ -16,7 +16,7 @@
 </header>
 
 <div class="w-[80%] mx-auto grid grid-cols-5 gap-6">
-    <form autocomplete="off" method="post" action="/flight/payment" class="col-span-3 w-full">
+    <form id="customer_info_form" autocomplete="off" method="post" action="/flight/payment" class="col-span-3 w-full">
         <h1 class="text-[26px] my-[20px] font-semibold text-center">Thông tin khách hàng</h1>
         <div class="grid md:grid-cols-2 md:gap-6">
           <div class="relative z-0 w-full mb-5 group">
@@ -36,7 +36,7 @@
                             <path d="M18 13.446a3.02 3.02 0 0 0-.946-1.985l-1.4-1.4a3.054 3.054 0 0 0-4.218 0l-.7.7a.983.983 0 0 1-1.39 0l-2.1-2.1a.983.983 0 0 1 0-1.389l.7-.7a2.98 2.98 0 0 0 0-4.217l-1.4-1.4a2.824 2.824 0 0 0-4.218 0c-3.619 3.619-3 8.229 1.752 12.979C6.785 16.639 9.45 18 11.912 18a7.175 7.175 0 0 0 5.139-2.325A2.9 2.9 0 0 0 18 13.446Z"/>
                         </svg>
                     </span>
-                    <input type="text" id="customer_phonenumber" name="customer_phonenumber" class="block py-2.5 ps-6 pe-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder=" " />
+                    <input type="text" id="customer_phonenumber" name="customer_phonenumber" class="block py-2.5 ps-6 pe-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" pattern="[0-9]{10}" placeholder=" " />
                     <label for="customer_phonenumber" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:start-6 peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Phone number</label>
                 </div>
                 <span class="text-gray-500 font-medium">VD: 0901234567 </span>
@@ -59,7 +59,7 @@
               </div>
 
             <div class="relative z-0 w-full mb-5 group">
-                <select id="countries" class="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" required>
+                <select id="sex" name="sex" class="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" required>
                   <option selected>Giới tính</option>
                   <option value="male">Nam</option>
                   <option value="female">Nữ</option>
@@ -319,13 +319,13 @@
 
 
               <div class="relative z-0 w-full mb-5 group">
-                  <input type="email" name="customer_id_number" id="customer_id_number" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                  <input type='text' pattern="[0-9]{12}" name="customer_id_number" id="customer_id_number" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                   <label for="customer_id_number" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">CMND</label>
               </div>
 
 
             <div class="relative z-0 w-full mb-5 group">
-                <select id="seat_type" class="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" required>
+                <select id="seat_type" name="seat_type" class="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" required>
                   <option selected>Hạng vé</option>
                   <option value="economy">ECONOMY</option>
                   <option value="business">BUSINESS</option>
@@ -333,11 +333,8 @@
             </div>
 
             <div class="relative z-0 w-full mb-5 group">
-                <select id="seat_number" class="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" required>
+                <select id="seat_number" name="seat_number" class="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" required>
                   <option selected>Số ghế</option>
-                  <option value="male">Nam</option>
-                  <option value="female">Nữ</option>
-                  <option value="diff">Khác</option>
                 </select>
             </div>
         </div>
@@ -352,29 +349,7 @@
             <div class="flex flex-col">
                 <div class="bg-white relative drop-shadow-2xl  rounded-3xl p-4 m-4">
                     <div class="flex-none sm:flex">
-                        <div class=" relative h-32 w-32   sm:mb-0 mb-3 hidden">
-                            <img src="https://tailwindcomponents.com/storage/avatars/njkIbPhyZCftc4g9XbMWwVsa7aGVPajYLRXhEeoo.jpg" alt="aji" class=" w-32 h-32 object-cover rounded-2xl">
-                            <a href="#"
-                                class="absolute -right-2 bottom-2   -ml-3  text-white p-1 text-xs bg-green-400 hover:bg-green-500 font-medium tracking-wider rounded-full transition ease-in duration-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                    class="h-4 w-4">
-                                    <path
-                                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z">
-                                    </path>
-                                </svg>
-                            </a>
-                        </div>
                         <div class="flex-auto justify-evenly">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center  my-1">
-                                    <span class="mr-3 rounded-full bg-white w-8 h-8">
-                                        <img src="https://image.winudf.com/v2/image1/Y29tLmJldHMuYWlyaW5kaWEudWlfaWNvbl8xNTU0NTM4MzcxXzA0Mw/icon.png?w=&amp;fakeurl=1" class="h-8 p-1">
-                                    </span>
-                                    <h2 class="font-medium">Airindia</h2>
-                                </div>
-                                <div class="ml-auto text-blue-800">{{ flight.id }}</div>
-                            </div>
-                            <div class="border-b border-dashed border-b-2 my-5"></div>
                             <div class="flex items-center">
                                 <div class="flex flex-col">
                                     <div class="flex-auto text-xs text-gray-400 my-1">
@@ -385,8 +360,6 @@
 
                                 </div>
                                 <div class="flex flex-col mx-auto">
-                                    <img src="https://image.winudf.com/v2/image1/Y29tLmJldHMuYWlyaW5kaWEudWlfaWNvbl8xNTU0NTM4MzcxXzA0Mw/icon.png?w=&amp;fakeurl=1" class="w-20 p-1">
-
                                     </div>
                                     <div class="flex flex-col ">
                                         <div class="flex-auto text-xs text-gray-400 my-1">
@@ -394,13 +367,22 @@
                                         </div>
                                         <div class="w-full flex-none text-lg text-blue-800 font-bold leading-none">{{ flight.arrival_airport_name }}</div>
                                         <div class="text-xs">{{ flight.arrival_airport_location }}</div>
-
                                     </div>
                                 </div>
                                 <div class="border-b border-dashed border-b-2 my-5 pt-5">
                                     <div class="absolute rounded-full w-5 h-5 bg-blue-900 -mt-2 -left-2"></div>
                                     <div class="absolute rounded-full w-5 h-5 bg-blue-900 -mt-2 -right-2"></div>
                                 </div>
+
+                            <div id="stop_airport_block" class="px-5">
+
+                            </div>
+                            {% if stop_airports %}
+                                <div class="border-b border-dashed border-b-2 my-5 pt-5">
+                                    <div class="absolute rounded-full w-5 h-5 bg-blue-900 -mt-2 -left-2"></div>
+                                    <div class="absolute rounded-full w-5 h-5 bg-blue-900 -mt-2 -right-2"></div>
+                                </div>
+                            {% endif %}
                                 <div class="flex items-center mb-5 p-5 text-sm">
                                     <div class="flex flex-col">
                                         <span class="text-sm">Máy bay</span>
@@ -426,13 +408,23 @@
                                 </div>
                                 <div class="flex items-center px-5 py-3 text-sm">
                                     <div class="flex flex-col ">
-                                        <span class="">Class</span>
-                                        <div class="font-semibold">Economic</div>
+                                        <span class="">Hạng vé</span>
+                                        <div id="seat_type_ticket" class="font-semibold">Hạng vé</div>
 
                                     </div>
                                     <div class="flex flex-col ml-auto">
-                                        <span class="">Seat</span>
-                                        <div class="font-semibold">12 E</div>
+                                        <span class="">Số ghế</span>
+                                        <div id="seat_number_ticket" class="font-semibold">Số ghế</div>
+                                    </div>
+                                </div>
+                                <div class="border-b border-dashed border-b-2 my-5 pt-5">
+                                    <div class="absolute rounded-full w-5 h-5 bg-blue-900 -mt-2 -left-2"></div>
+                                    <div class="absolute rounded-full w-5 h-5 bg-blue-900 -mt-2 -right-2"></div>
+                                </div>
+                                <div class="flex items-center px-5 py-3 text-sm">
+                                    <div class="flex w-full justify-between">
+                                        <span class="">Giá vé</span>
+                                        <div id="price" class="text-[22px] text-orange-500 font-bold"></div>
                                     </div>
                                 </div>
                             </div>
@@ -440,10 +432,109 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
+<script src="{{ url_for('static', filename='js/common.js') }}"></script>
+<script>
 
+    let stop_airports = [
+                {% for p in stop_airports %}
+                    {
+                        'name': '{{ p["name"] }}',
+                        'location': '{{ p["location"] }}',
+                        'stop_time': '{{ p["stop_time"] }}'
+                    },
+                {% endfor %}
+            ]
+    let business_seat_numbers = parseInt('{{ flight.business_seats }}')
+    let economy_seat_numbers = parseInt('{{ flight.economy_seats }}')
+        console.log(business_seat_numbers, economy_seat_numbers, '{{ flight.business_seats }}')
+    let seat_type_ticket = document.getElementById('seat_type_ticket')
+    let seat_number_ticket = document.getElementById('seat_number_ticket')
+    let seat_number_container = document.getElementById('seat_number')
+    let price_block = document.getElementById('price')
+    let price = 0
 
+    document.getElementById('seat_type').addEventListener('change', function (e) {
+        seat_type_ticket.innerText = e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+        let seat_html_string = ``
+        if (e.target.value == 'economy') {
+            {% for s in economy_seats %}
+                seat_html_string += `
+                    <option value="{{ s.name }}">{{ s.name }}</option>
+                `
+
+            {% endfor %}
+            price = '{{ flight.economy_price }}'
+        } else {
+            {% for s in business_seats %}
+                seat_html_string += `
+                    <option value="{{ s.name }}">{{ s.name }}</option>
+                `
+            {% endfor %}
+            price = '{{ flight.business_price }}'
+        }
+        seat_number_container.innerHTML = `<option selected>Số ghế</option> ${seat_html_string}`
+        price = Number(price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'})
+        price_block.innerHTML = price
+        console.log(typeof Number(price), price)
+    })
+
+    seat_number_container.addEventListener('change', (e) => {
+        seat_number_ticket.innerText = e.target.value
+    })
+    let stop_airport_block = document.getElementById('stop_airport_block')
+        stop_airports.forEach((airport) => {
+            stop_airport_block.innerHTML += `
+                    <h1 class="text-sm mb-2">Sân bay trung gian</h1>
+                    <div class="grid grid-cols-2">
+                        <div class="flex flex-col ">
+                            <div class="w-full flex-none text-blue-800 font-bold leading-none">${abbreviateWords(airport.name)}</div>
+                            <div class="">${airport.location}</div>
+                        </div>
+                        <div class="text-end">
+                            <div class="text-sm">Thời gian dừng</div>
+                            <div class="font-semibold">${airport.stop_time}</div>
+                        </div>
+
+                    </div>
+            `
+        })
+
+    let form = document.getElementById('customer_info_form')
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault()
+
+        fetch('/flight/payment', {
+            method: 'post',
+            body: JSON.stringify({
+                'customer_lastname':customer_lastname.value,
+                'customer_firstname':customer_firstname.value,
+                'customer_phonenumber':customer_phonenumber.value,
+                'customer_email':customer_email.value,
+                'customer_dob':customer_dob.value,
+                'sex':sex.value,
+                'country':country.value,
+                'customer_id_number':customer_id_number.value,
+                'seat_type':seat_type.value,
+                'seat_number':seat_number.value,
+                'flight_id': '{{ flight.flight_id }}',
+                'ticket_price': price
+            }),
+            headers: {
+                'Content-Type': "application/json"
+            }
+        }
+        ).then(function (res) {
+            return res.json()
+        }).then(function (data) {
+            console.log(data)
+            if (data.status == '200') {
+                window.location.replace(data.route)
+            }
+        })
+    })
+</script>
 {% endblock %}

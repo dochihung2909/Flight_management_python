@@ -21,6 +21,7 @@ app.add_url_rule('/em', 'employee_login', controller.employee_login)
 app.add_url_rule('/em/sell_ticket', 'employee_sell_ticket', controller.sell_ticket, methods=['POST', 'GET'])
 app.add_url_rule('/api/flight', 'add_flight', controller.add_flight, methods=['POST', 'GET'])
 app.add_url_rule('/flight', 'flight_view', controller.flight_booking, methods=['POST', 'GET'])
+app.add_url_rule('/flight/payment', 'payment', controller.payment, methods=['POST', 'GET'])
 
 
 @login.user_loader

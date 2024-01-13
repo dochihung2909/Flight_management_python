@@ -1,7 +1,7 @@
 import json
 
 from app import app, dao, models, db
-from app.models import UserRoleEnum
+from app.models import UserRoleEnum, SeatRoleEnum
 from flask import render_template, request, redirect, jsonify, current_app, session
 
 from flask_login import login_user, current_user, login_required, logout_user
@@ -211,17 +211,32 @@ def add_flight():
             arrival_airport = dao.get_airport(kw=data.get('arrival_airport'))[0]
             route_flight = dao.find_route(departure_airport, arrival_airport).id
             print(route_flight)
-            flights = dao.get_flights(route_id=route_flight, start_date=start_date)
-            print(flights)
-            flights = (
-                [{'id': flight.id,
-                  'departure_time': flight.departure_time,
-                  'time_flight': flight.time_flight,
-                  'departure_airport': {'name': departure_airport.name, 'location': departure_airport.location},
-                  'arrival_airport': {'name': arrival_airport.name, 'location': arrival_airport.location},
-                  'economy_price': flight.economy_price,
-                  'business_price': flight.business_price
-                } for flight in flights])
+            fs = dao.get_flights(route_id=route_flight, start_date=start_date)
+            print(fs)
+            flights = []
+            for flight in fs:
+                f = {
+                    'id': flight.id,
+                    'departure_time': flight.departure_time,
+                    'time_flight': flight.time_flight,
+                    'departure_airport': {'name': departure_airport.name, 'location': departure_airport.location},
+                    'arrival_airport': {'name': arrival_airport.name, 'location': arrival_airport.location},
+                    'economy_price': flight.economy_price,
+                    'business_price': flight.business_price,
+                    'stop_airports': []
+                }
+
+                stop_airports = dao.get_stop_airport(flight_id=flight.id)
+                if stop_airports:
+                    for ap in stop_airports:
+                        print(ap)
+                        airport = dao.get_airport(airport_id=ap.airport_id)
+                        f['stop_airports'].append({
+                            'name': airport.name,
+                            'location': airport.location
+                        })
+                print(f)
+                flights.append(f)
         except Exception as ex:
             print(ex)
             return jsonify({'status': 500, 'err_msg': 'Something wrong!'})
@@ -233,10 +248,8 @@ def add_flight():
 def flight_booking():
     if request.method == 'POST':
         data = request.json
-        print(data)
         flight = dao.get_flights(flight_id=data.get('flight_id'))
-
-        departure_time = str(flight.departure_time)
+        print(flight)
         if flight:
             session['flight'] = {
                 'flight_id': flight.id,
@@ -246,13 +259,76 @@ def flight_booking():
                 'arrival_airport_name': data.get('arrival_airport_name'),
                 'arrival_airport_location': data.get('arrival_airport_location'),
                 'arrival_time': data.get('arrival_time'),
-                'aircraft': flight.aircraft
+                'aircraft': flight.aircraft,
+                'business_seats': flight.business_seats,
+                'economy_seats': flight.economy_seats,
+                'economy_price': flight.economy_price,
+                'business_price': flight.business_price
             }
             return jsonify({'status': 200, 'route': '/flight'})
     else:
         flight = session.get('flight')
+        print(flight)
         if (flight):
-            print(flight)
-            aircraft_name = dao.get_aircraft(id=flight.get('aircraft')).name
-            return render_template('/flight/index.html', flight=flight, aircraft=aircraft_name)
+            stop_airports = dao.get_stop_airport(flight_id=flight.get('flight_id'))
+            stop_airports_info = []
+            if (stop_airports):
+                for ap in stop_airports:
+                    airport = dao.get_airport(airport_id=ap.airport_id)
+                    stop_airports_info.append({
+                        'name': airport.name,
+                        'location': airport.location,
+                        'stop_time': ap.stop_time
+                    })
+            else:
+                stop_airports_info = None
+            aircraft = dao.get_aircraft(id=flight.get('aircraft'))
+            seats = dao.get_seat(aircraft_id=aircraft.id)
+            economy_seats = [s for s in seats if s.type == SeatRoleEnum.ECONOMY]
+            business_seats = [s for s in seats if s.type == SeatRoleEnum.BUSINESS]
+            return render_template('/flight/index.html', flight=flight, aircraft=aircraft.name, stop_airports=stop_airports_info, economy_seats=economy_seats, business_seats=business_seats)
+    return 'You dont have permision to this route'
+
+@login_required
+def payment():
+    if request.method == 'POST':
+        data = request.json
+        print(data)
+        if data.get('sex') == 'male':
+            sex = 1
+        else:
+            sex = 0
+        dob = datetime.strptime(data.get('customer_dob') + ' 00:00:00', '%m/%d/%Y %H:%M:%S')
+        print(dob)
+        booking = {
+            'first_name': data.get('customer_firstname'),
+            'last_name': data.get('customer_lastname'),
+            'dob':dob,
+            'sex':sex,
+            'phone_number':data.get('customer_phonenumber'),
+            'citizen_id':data.get('customer_id_number'),
+            'email':data.get('customer_email')
+        }
+        if (current_user.is_authenticated):
+            customer_id = current_user.id
+        print(booking)
+        b = dao.add_booking(booking=booking, customer_id=customer_id)
+        if b:
+            session['ticket'] = {
+                'booking_id': b.id,
+                'seat_type': data.get('seat_type'),
+                'seat_number': data.get('seat_number')
+            }
+            return jsonify({'status': 200, 'route': '/flight/payment'})
+
+    else:
+        booking = session['ticket']
+        flight = session['flight']
+        if not flight:
+            flight = []
+
+        print(session['flight'], booking)
+
+        return render_template('/flight/payment.html', flight=flight, booking = booking)
+
     return 'You dont have permision to this route'

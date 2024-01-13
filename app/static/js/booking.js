@@ -14,7 +14,7 @@ async function search_flight(queryString) {
             let flight_html = ''
 
             flights.forEach(function (f) {
-                console.log(f)
+                console.log(f, f.stop_airports.length)
 
                 departure_time = new Date(f.departure_time)
 
@@ -44,6 +44,9 @@ async function search_flight(queryString) {
                                 <span class="font-bold">${abbreviateWords(f.departure_airport.name)}</span> ${f.departure_airport.name}</p>
                             <p class="text-gray-500">${f.departure_airport.location}</p>
                           </div>
+                          <div class="flex items-center">
+                            <p class="text-gray-500"><span class="font-bold">${f.stop_airports.length > 0 ? `${f.stop_airports.length} điểm dừng` : `bay thẳng`}</span></p>
+                          </div> 
                           <div class="flex flex-col flex-wrap p-2">
                             <p class="font-bold">${arrivial_time.getHours()}:${arrivial_time.getMinutes()}</p>
                             <p class="text-gray-500"><span class="font-bold">${abbreviateWords(f.arrival_airport.name)}</span> ${f.arrival_airport.name}</p>
@@ -90,11 +93,11 @@ function book_flight(flight_id, departure_airport_name, departure_airport_locati
     ).then(function (res) {
         return res.json()
     }).then(function (data) {
+        console.log(data.status)
         if (data.status == '200')
             window.location.replace(data.route)
     })
 }
-
 
 function abbreviateWords(inputString) {
     let arr = inputString.split(' ')
@@ -117,11 +120,13 @@ function addTimeStrings(dateString, timeString) {
 
     var parts = timeString.split(/:/);
     var timePeriodMillis = (parseInt(parts[0], 10) * 60 * 60 * 1000) +
-                           (parseInt(parts[1], 10) * 60 * 1000) +
-                           (parseInt(parts[2], 10) * 1000);
+        (parseInt(parts[1], 10) * 60 * 1000) +
+        (parseInt(parts[2], 10) * 1000);
 
     var newDate = new Date();
     newDate.setTime(dateMillis + timePeriodMillis);
 
     return newDate;
 }
+
+

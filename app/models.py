@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Enum, DateTime, Double, Time
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Enum, DateTime, Double, Time, Date
 from sqlalchemy.orm import relationship
 from app import db, app
 import enum
@@ -27,12 +27,6 @@ class User(BaseModel, UserMixin):
     __tablename__ = 'user'
 
     name = Column(String(50), nullable=False)
-    dob = Column(DateTime)
-    sex = Column(Boolean)
-    phone_number = Column(String(50))
-    citizen_id = Column(String(50))
-    email = Column(String(50))
-    address = Column(String(50))
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
     user_role = Column(Enum(UserRoleEnum), default=UserRoleEnum.CUSTOMER)
@@ -41,8 +35,16 @@ class User(BaseModel, UserMixin):
 
 
 class Booking(BaseModel):
+
+    first_name = Column(String(50))
+    last_name = Column(String(50))
+    dob = Column(Date)
+    sex = Column(Boolean)
+    phone_number = Column(String(50))
+    citizen_id = Column(String(50))
+    email = Column(String(50))
     booking_date = Column(DateTime)
-    customer_id = Column(String(50), ForeignKey(User.id))
+    customer_id = Column(String(50), ForeignKey(User.id), nullable=True)
     status = Column(Boolean, default=False)
     ticket = relationship('Ticket', backref='booking_ticket')
 
@@ -93,12 +95,13 @@ class Flight(BaseModel):
     ticket = relationship('Ticket', backref='flight_ticket')
 
 
-class Seat(BaseModel):
+class Seat(db.Model):
     __tablename__ = 'seat'
 
+    id = Column(String(50), primary_key=True)
+    aircraft = Column(String(50), ForeignKey(Aircraft.id), primary_key=True)
     name = Column(String(10))
     type = Column(Enum(SeatRoleEnum), default=SeatRoleEnum.ECONOMY)
-    aircraft = Column(String(50), ForeignKey(Aircraft.id), nullable=False)
     ticket = relationship('Ticket', backref='seat_ticket', uselist=False)
 
 
@@ -132,14 +135,28 @@ class Policy(BaseModel):
     time_sell_ticket = Column(Integer)
 
 
+def create_seats_for_aircraft(aircraft):
+    total_capacity = aircraft.capacity
+    business_ratio = 1 / 3
+
+    business_seats = int(total_capacity * business_ratio)
+    economy_seats = total_capacity - business_seats
+
+    for i in range(business_seats):
+        seat = Seat(id=f'B{i+1}', name=f'B{i+1}', type=SeatRoleEnum.BUSINESS, aircraft=aircraft.id)
+        db.session.add(seat)
+
+    for i in range(economy_seats):
+        seat = Seat(id=f'E{i+1}', name=f'E{i+1}', type=SeatRoleEnum.ECONOMY, aircraft=aircraft.id)
+        db.session.add(seat)
+
+    db.session.commit()
+
 if __name__ == '__main__':
     with app.app_context():
-        engine = sqlalchemy.create_engine('mysql+pymysql://root:!Tinhyeu123@localhost')
-        engine.execute("CREATE DATABASE IF NOT EXISTS flightmanagement")
-
         db.create_all()
         import hashlib
-        u1 = User(id='ADMIN00001', username='hungts', password=hashlib.md5('123456'.encode('utf-8')).hexdigest(), name='Do Chi Hung', dob='2003/09/30', sex=0, phone_number='0364623646', email='hungdo29090310@gmail.com', address='125 TMT1', user_role=UserRoleEnum.ADMIN)
+        u1 = User(id='ADMIN00001', username='hungts', password=hashlib.md5('123456'.encode('utf-8')).hexdigest(), name='Do Chi Hung', user_role=UserRoleEnum.ADMIN)
 
         airports = [
             Airport(id='AP00001', name='Tân Sơn Nhất', location='Ho Chi Minh City'),
@@ -155,14 +172,16 @@ if __name__ == '__main__':
         ]
 
         aircrafts = [
-            Aircraft(id='AC00001', name='Boeing 737', manufacturer='Boeing', capacity=150),
-            Aircraft(id='AC00004', name='Embraer E190', manufacturer='Embraer', capacity=100),
-            Aircraft(id='AC00005', name='Airbus A350', manufacturer='Airbus', capacity=300),
-            Aircraft(id='AC00006', name='Bombardier CRJ900', manufacturer='Bombardier', capacity=90),
-            Aircraft(id='AC00010', name='ATR 72', manufacturer='ATR', capacity=70)
+            Aircraft(id='AC00001', name='Boeing 737', manufacturer='Boeing', capacity=75),
+            Aircraft(id='AC00004', name='Embraer E190', manufacturer='Embraer', capacity=50),
+            Aircraft(id='AC00005', name='Airbus A350', manufacturer='Airbus', capacity=100),
+            Aircraft(id='AC00006', name='Bombardier CRJ900', manufacturer='Bombardier', capacity=60),
+            Aircraft(id='AC00010', name='ATR 72', manufacturer='ATR', capacity=40)
         ]
 
         p1 = Policy(id='P00001', airport_number=10, time_flight_limit=30, stop_airport_max_number=2, stop_time_minimum=20, stop_time_maximum=30, time_book_ticket=12, time_sell_ticket=4)
+
+
 
         routes = []
         for i in range(len(airports) - 1):
@@ -186,4 +205,7 @@ if __name__ == '__main__':
         db.session.add_all(aircrafts)
         db.session.add(u1)
         db.session.commit()
+
+        for aircraft in aircrafts:
+            create_seats_for_aircraft(aircraft)
 

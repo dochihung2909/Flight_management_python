@@ -1,8 +1,8 @@
 import hashlib
-from app.models import User, Airport, SeatRoleEnum, Flight, Route, Aircraft, UserRoleEnum,Policy, StopAirport
+from app.models import User, Airport, SeatRoleEnum, Flight, Route, Aircraft, UserRoleEnum,Policy, StopAirport, Seat, Booking
 from app import db, dao
 from sqlalchemy import cast, Date
-import datetime, time
+from datetime import datetime, time
 
 
 def auth_user(username, password):
@@ -22,6 +22,7 @@ def get_all_airport():
 
 def get_user_by_id(user_id):
     return User.query.get(user_id)
+
 
 
 def get_all_seat_type():
@@ -44,6 +45,11 @@ def add_stopairport(stop_airport, flight_id, airport_id):
         db.session.commit()
     return sa
 
+def get_stop_airport(flight_id):
+    stop_airports = StopAirport.query
+    if flight_id:
+        stop_airports = stop_airports.filter(StopAirport.flight_id.__eq__(flight_id))
+    return stop_airports.all()
 
 def add_flight(flight, employee_id):
     if flight:
@@ -75,13 +81,37 @@ def get_aircraft(id = None, kw = None):
     return aircrafts.all()
 
 
-def get_airport(kw = None):
+def get_airport(airport_id=None, kw = None):
     airports = Airport.query
     if kw:
         airports = airports.filter((Airport.name + " " + Airport.location).contains(kw))
+    if airport_id:
+        airports = airports.filter(Airport.id.__eq__(airport_id)).first()
+        return airports
 
     return airports.all()
 
+
+def get_seat(aircraft_id = None):
+    seats = Seat.query
+    if aircraft_id:
+        seats = seats.filter(Seat.aircraft.__eq__(aircraft_id))
+    return seats.all()
+
+
+def count_booking():
+    return db.session.query(Booking.id).count()
+
+def add_booking(booking = None, customer_id=None):
+    booking_id = f'B{count_booking():09d}'
+    b = Booking(id=booking_id, first_name= booking.get('first_name'),last_name = booking.get('last_name'),dob= booking.get('dob'),sex= booking.get('sex'),phone_number= booking.get('phone_number'),citizen_id= booking.get('citizen_id'),email= booking.get('email'),booking_date = datetime.today())
+
+    if b:
+        if customer_id:
+            b.customer_id = customer_id
+        db.session.add(b)
+        db.session.commit()
+    return b
 
 def count_flight():
     return db.session.query(Flight.id).count()
@@ -113,14 +143,14 @@ def get_flights(flight_id = None, route_id = None, start_date = None, end_date =
 
 
 def serialize_datetime(obj):
-    if isinstance(obj, datetime.datetime):
+    if isinstance(obj, datetime):
         return obj.isoformat()
     raise TypeError("Type not serializable")
 
 def custom_serializer(obj):
-    if isinstance(obj, datetime.datetime):
+    if isinstance(obj, datetime):
         return obj.strftime('%Y-%m-%d %H:%M:%S')
-    elif isinstance(obj, datetime.time):
+    elif isinstance(obj, time):
         return obj.strftime('%H:%M:%S')
     else:
         raise TypeError("Type not serializable")
