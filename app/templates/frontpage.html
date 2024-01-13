@@ -15,9 +15,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="">
+    <div class="w-[80%] mx-auto my-8">
         <form id="search_flight_form" method="GET" action="/api/flight">
-            <div class="grid grid-cols-3 items-center gap-[20px]">
+            <div class="grid grid-cols-2 items-center gap-[20px]">
                 <div class="w-full relative">
                     <label for="departure_airport" class="mb-[6px]">
                         Từ
@@ -64,77 +64,24 @@
                 </div>
 
                 <div class="w-full relative">
-                    <label for="seat_type" class="mb-[6px]">
-                        Hạng ghế
-                    </label>
+                    <h1 class="mb-[4px]">
+                        Ngày đi
+                    </h1>
                     <div class="relative">
                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg" data-id="IcTransportSeatClass">
-                                <path d="M6.99997 21H17M4.10496 3H4.76788C6.0927 3 7.26067 3.869 7.64136 5.13796L9.78617 12.2873C9.91307 12.7103 10.3024 13 10.744 13H16.4059C18.0152 13 19.7434 13.8444 20.5714 15.2244C21.3043 16.4459 20.4244 18 18.9999 18H7.21493C5.67368 18 4.38318 16.8321 4.22982 15.2985L3.10992 4.0995C3.05105 3.51082 3.51333 3 4.10496 3Z"
-                                      stroke="#687176" stroke-width="2" stroke-linecap="round"
-                                      stroke-linejoin="round"></path>
-                                <path d="M13 10H17" stroke="#0194f3" stroke-width="2" stroke-linecap="round"
-                                      stroke-linejoin="round"></path>
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                 xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                             </svg>
                         </div>
-                        <select style="-webkit-appearance: none" id="seat_type"
-                                class="text-[16px] w-full focus:outline-none border-[4px] border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block ps-10 p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500 datepicker-input ui-autocomplete-input">
-                            {% for type in seat_types %}
-                                <option value="{{ type }}">{{ type }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-
-                <div date-rangepicker class="col-span-2 flex items-center flex-1 gap-[20px]">
-                    <div class="w-full relative">
-                        <h1 class="mb-[4px]">
-                            Ngày đi
-                        </h1>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                                </svg>
-                            </div>
-                            <input id="start" name="start" type="text"
-                                   class=" text-[16px] w-full focus:outline-none border-[4px] border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block ps-10 p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500 datepicker-input ui-autocomplete-input"
-                                   placeholder="Ngày đi">
-                        </div>
-                    </div>
-                    <div class="w-full relative">
-                        <div id="picktime_back" class=" pointer-events-none relative hidden">
-                            <h1>
-                                Khứ hồi
-                            </h1>
-                            <div class=" relative">
-                                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                         xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                                    </svg>
-                                </div>
-                                <input id="end" disabled required name="end" type="text"
-                                       class="text-[16px] w-full focus:outline-none border-[4px] border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block ps-10 p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500 datepicker-input ui-autocomplete-input"
-                                       placeholder="Ngày về">
-                            </div>
-                        </div>
-
-                        <div class="absolute mb-[6px] pointer-events-auto">
-                            <input id="roundTrip"
-                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                   type="checkbox" name="type_flight" value="roundTrip">
-                            <label for="roundTrip">
-                                <span>Khứ hồi</span>
-                            </label>
-                        </div>
+                        <input datepicker id="start" name="start" type="text"
+                               class=" text-[16px] w-full focus:outline-none border-[4px] border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block ps-10 p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500 datepicker-input ui-autocomplete-input"
+                               placeholder="Ngày đi">
                     </div>
                 </div>
 
                 <div class="self-end flex bg-orange-500 rounded-[20px] border-[4px] border-gray-200">
-                    <button id="submit_form_btn" onclick="search_flight()" type="submit"
+                    <button id="submit_form_btn" type="submit"
                             class="flex w-full gap-[8px] h-[50px] items-center justify-center">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                              data-id="IcSystemSearch">
@@ -156,18 +103,6 @@
 
 
     <script>
-        let roundTripBtn = document.querySelector("input[name='type_flight']")
-        roundTripBtn.addEventListener('click', function (e) {
-            let picktime_back = document.querySelector('#picktime_back')
-            if (this.checked) {
-                picktime_back.classList.remove('pointer-events-none', 'hidden')
-                picktime_back.querySelector('input').removeAttribute('disabled')
-            } else {
-                picktime_back.classList.add('pointer-events-none', 'hidden')
-                picktime_back.querySelector('input').setAttribute('disabled', '')
-            }
-        })
-
         $(function () {
             var availableTags = [
                 {% for p in airports %}
