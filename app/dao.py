@@ -44,25 +44,41 @@ def get_policy(policy_id=None):
     return p.first()
 
 
-def add_stopairport(stop_airport, flight_id, airport_id):
+def add_stopairport(stop_airport, flight_id, airport_id, is_update=None):
+    sa = get_stop_airport(flight_id=flight_id, airport_id=airport_id)
+    print(sa)
+    if sa:
+        new_sa = {
+            'flight_id': flight_id,
+            'airport_id': airport_id,
+            'stop_time': int(stop_airport.get('stop_time')),
+            'note': stop_airport.get('note')
+        }
+        sa[0].update_from_params(new_sa)
+        # print(sa)
+        db.session.commit()
+        return sa
     sa = StopAirport(airport_id=airport_id, flight_id=flight_id, note=stop_airport.get('note'), stop_time=stop_airport.get('stop_time'))
     if sa:
         db.session.add(sa)
         db.session.commit()
     return sa
 
-def get_stop_airport(flight_id):
+def get_stop_airport(flight_id=None, airport_id=None):
     stop_airports = StopAirport.query
     if flight_id:
         stop_airports = stop_airports.filter(StopAirport.flight_id.__eq__(flight_id))
+    if airport_id:
+        stop_airports = stop_airports.filter(StopAirport.airport_id.__eq__(airport_id))
     return stop_airports.all()
 
 def add_flight(flight, employee_id, is_update = None):
     if flight:
         if is_update:
-            f = get_flights(flight.get(id))
-            f.update_from_params(params=flight)
+            f = get_flights(flight_id=flight.get(id))[0]
+            f.update_from_params(flight)
             db.session.commit()
+            return f
         else:
             f = Flight(economy_price=flight.get('economy_price'), business_price=flight.get('business_price'),employee_id=employee_id,id=flight.get('flight_id'), departure_time=flight.get('departure_time'), time_flight=flight.get('time_flight'), economy_seats=flight.get('economy_seats'), business_seats=flight.get('business_seats'), route=flight.get('route'), aircraft=flight.get('aircraft'))
             db.session.add(f)

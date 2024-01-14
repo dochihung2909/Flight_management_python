@@ -51,7 +51,6 @@ def update_schedule(flight_id):
         arrival_airport = dao.get_airport(airport_id=route.arrival_airport_id)
         aircraft = dao.get_aircraft(id=flight.aircraft)
         stop_airports = dao.get_stop_airport(flight_id=flight_id)
-
         stop_airports = [{
             'airport_name': dao.get_airport(airport_id=ap.airport_id).name + " " + dao.get_airport(airport_id=ap.airport_id).location,
             'stop_time': ap.stop_time,
@@ -230,14 +229,13 @@ def update_flight(flight_id):
                     'economy_price': data.get('economy_price'),
                     'business_price': data.get('business_price')
                 }
-                print(flight)
                 employee_id = current_user.id
                 if dao.add_flight(flight, employee_id, is_update=True):
                     for stop_airport in stop_airports_data:
                         airport = dao.get_airport(kw=stop_airport.get('name'))[0]
-                        print(airport.name)
                         if airport:
-                            dao.add_stopairport(stop_airport, flight_id=flight.get('flight_id'), airport_id=airport.id)
+                            # print(airport.id)
+                            dao.add_stopairport(stop_airport=stop_airport, flight_id=flight.get('flight_id'), airport_id=airport.id, is_update=True)
         except Exception as ex:
             print(ex)
             return jsonify({'status': 500, 'err_msg': 'Something wrong!'})

@@ -137,6 +137,11 @@ class StopAirport(db.Model):
     stop_time = Column(Integer)
     note = Column(String(500))
 
+    def update_from_params(self, params):
+        # Duyệt qua từng thuộc tính trong từ điển params và cập nhật giá trị tương ứng trong đối tượng Policy
+        for key, value in params.items():
+            setattr(self, key, value)
+
 
 
 class Policy(BaseModel):

@@ -161,9 +161,10 @@
               'name': '{{p.airport_name}}',
               'stop_time': '{{p.stop_time}}',
               'note': '{{p.note}}'
-          }
+          },
             {% endfor %}
         ];
+        console.log(s_airports)
       let stop_airport_num = {{ Policy.stop_airport_max_number }}
       let stop_airport_container =  document.getElementById('stop_airport_container')
         for (let i = 1;i<=stop_airport_num;i++) {
