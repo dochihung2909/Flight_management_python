@@ -32,7 +32,7 @@
      <form id="payment_form" method="POST" action="/api/checkout" class="w-full">
         <label for="card_number" class="">Số thẻ tín dụng:</label>
         <div class="relative">
-            <input type="text" id="card_number" name="card_number" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pe-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  pattern="^\d{4} \d{4} \d{4} \d{4}$" required placeholder="0000 0000 0000 0000" data-slots="0" data-accept="\d" size="19" />
+            <input type="text" id="card_number" name="card_number" class="pay mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pe-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  pattern="^\d{4} \d{4} \d{4} \d{4}$" required placeholder="0000 0000 0000 0000" data-slots="0" data-accept="\d" size="19" />
             <div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
                 <svg fill="none" class="h-6 text-[#1434CB] dark:text-white" viewBox="0 0 36 21"><path fill="currentColor" d="M23.315 4.773c-2.542 0-4.813 1.3-4.813 3.705 0 2.756 4.028 2.947 4.028 4.332 0 .583-.676 1.105-1.832 1.105-1.64 0-2.866-.73-2.866-.73l-.524 2.426s1.412.616 3.286.616c2.78 0 4.966-1.365 4.966-3.81 0-2.913-4.045-3.097-4.045-4.383 0-.457.555-.957 1.708-.957 1.3 0 2.36.53 2.36.53l.514-2.343s-1.154-.491-2.782-.491zM.062 4.95L0 5.303s1.07.193 2.032.579c1.24.442 1.329.7 1.537 1.499l2.276 8.664h3.05l4.7-11.095h-3.043l-3.02 7.543L6.3 6.1c-.113-.732-.686-1.15-1.386-1.15H.062zm14.757 0l-2.387 11.095h2.902l2.38-11.096h-2.895zm16.187 0c-.7 0-1.07.37-1.342 1.016L25.41 16.045h3.044l.589-1.68h3.708l.358 1.68h2.685L33.453 4.95h-2.447zm.396 2.997l.902 4.164h-2.417l1.515-4.164z"/></svg>
             </div>
@@ -97,117 +97,6 @@
     </div>
 </div>
 
-
-
-<div id="successModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
-    <!-- component -->
-<div class="flex flex-col items-center justify-center min-h-screen bg-center bg-cover"
-    style="background-image: url(https://images.unsplash.com/photo-1519666336592-e225a99dcd2f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1888&q=80);">
-    <div class="absolute bg-blue-900 opacity-80 inset-0 z-0"></div>
-    <div class="max-w-md w-full h-full mx-auto z-10 bg-blue-900 rounded-3xl">
-        <div class="flex flex-col">
-            <div class="bg-white relative drop-shadow-2xl  rounded-3xl p-4 m-4">
-                <div class="flex-none sm:flex">
-                    <div class="flex-auto justify-evenly">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center  my-1">
-                                <span class="mr-3 rounded-full bg-white w-8 h-8">
-                                    <img src="https://image.winudf.com/v2/image1/Y29tLmJldHMuYWlyaW5kaWEudWlfaWNvbl8xNTU0NTM4MzcxXzA0Mw/icon.png?w=&amp;fakeurl=1" class="h-8 p-1">
-                                </span>
-                                <h2 class="font-medium">Airindia</h2>
-                            </div>
-                            <div class="ml-auto text-blue-800">A380</div>
-                        </div>
-                        <div class="border-b border-dashed border-b-2 my-5"></div>
-                        <div class="flex items-center">
-                            <div class="flex flex-col">
-                                <div class="flex-auto text-xs text-gray-400 my-1">
-                                    <span class="mr-1 ">MO</span><span>19 22</span>
-                                </div>
-                                <div class="w-full flex-none text-lg text-blue-800 font-bold leading-none">COK</div>
-                                <div class="text-xs">Cochi</div>
-
-                            </div>
-                            <div class="flex flex-col mx-auto">
-                                <img src="https://image.winudf.com/v2/image1/Y29tLmJldHMuYWlyaW5kaWEudWlfaWNvbl8xNTU0NTM4MzcxXzA0Mw/icon.png?w=&amp;fakeurl=1" class="w-20 p-1">
-
-                                </div>
-                                <div class="flex flex-col ">
-                                    <div class="flex-auto text-xs text-gray-400 my-1">
-                                        <span class="mr-1">MO</span><span>19 22</span>
-                                    </div>
-                                    <div class="w-full flex-none text-lg text-blue-800 font-bold leading-none">DXB</div>
-                                    <div class="text-xs">Dubai</div>
-
-                                </div>
-                            </div>
-                            <div class="border-b border-dashed border-b-2 my-5 pt-5">
-                                <div class="absolute rounded-full w-5 h-5 bg-blue-900 -mt-2 -left-2"></div>
-                                <div class="absolute rounded-full w-5 h-5 bg-blue-900 -mt-2 -right-2"></div>
-                            </div>
-                            <div class="flex items-center mb-5 p-5 text-sm">
-                                <div class="flex flex-col">
-                                    <span class="text-sm">Flight</span>
-                                    <div class="font-semibold">Airbus380</div>
-
-                                </div>
-                                <div class="flex flex-col ml-auto">
-                                    <span class="text-sm">Gate</span>
-                                    <div class="font-semibold">B3</div>
-
-                                </div>
-                            </div>
-                            <div class="flex items-center mb-4 px-5">
-                                <div class="flex flex-col text-sm">
-                                    <span class="">Board</span>
-                                    <div class="font-semibold">11:50AM</div>
-
-                                </div>
-                                <div class="flex flex-col mx-auto text-sm">
-                                    <span class="">Departs</span>
-                                    <div class="font-semibold">11:30Am</div>
-
-                                </div>
-                                <div class="flex flex-col text-sm">
-                                    <span class="">Arrived</span>
-                                    <div class="font-semibold">2:00PM</div>
-
-                                </div>
-                            </div>
-                            <div class="border-b border-dashed border-b-2 my-5 pt-5">
-                                <div class="absolute rounded-full w-5 h-5 bg-blue-900 -mt-2 -left-2"></div>
-                                <div class="absolute rounded-full w-5 h-5 bg-blue-900 -mt-2 -right-2"></div>
-                            </div>
-                            <div class="flex items-center px-5 pt-3 text-sm">
-                                <div class="flex flex-col">
-                                    <span class="">Passanger</span>
-                                    <div class="font-semibold">Ajimon</div>
-
-                                </div>
-                                <div class="flex flex-col mx-auto">
-                                    <span class="">Class</span>
-                                    <div class="font-semibold">Economic</div>
-
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="">Seat</span>
-                                    <div class="font-semibold">12 E</div>
-
-                                </div>
-                            </div>
-                            <div class="flex flex-col py-5  justify-center text-sm ">
-                                <h6 class="font-bold text-center">Boarding Pass</h6>
-
-                                <div class="barcode h-14 w-0 inline-block mt-4 relative left-auto"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
 </div>
 
 <script>
@@ -236,7 +125,6 @@
             return res.json()
         }).then(function (data) {
             if (data.status == '200') {
-                document.getElementById('successButton').click();
             }
         })
     })
@@ -252,7 +140,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('successButton').click();
 
 
         for (const el of document.querySelectorAll("[placeholder][data-slots]")) {
