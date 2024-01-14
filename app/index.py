@@ -13,6 +13,7 @@ from app.models import User, UserRoleEnum
 app.add_url_rule('/', 'homepage', controller.home)
 app.add_url_rule('/admin/login', 'admin_login', controller.login_page, methods=['POST'])
 app.add_url_rule('/admin/employee', 'add_employee', controller.add_employee, methods=['POST'])
+app.add_url_rule('/admin/policy/<policy_id>', 'update_policy', controller.update_policy, methods=['POST'])
 app.add_url_rule('/login', 'login', controller.login, methods=['POST', 'GET'])
 app.add_url_rule('/signup', 'signup', controller.signup, methods=['POST', 'GET'])
 app.add_url_rule('/logout', 'logout', controller.logout)
@@ -21,7 +22,7 @@ app.add_url_rule('/em', 'employee_login', controller.employee_login)
 app.add_url_rule('/em/sell_ticket', 'employee_sell_ticket', controller.sell_ticket, methods=['POST', 'GET'])
 app.add_url_rule('/api/flight', 'add_flight', controller.add_flight, methods=['POST', 'GET'])
 app.add_url_rule('/flight', 'flight_view', controller.flight_booking, methods=['POST', 'GET'])
-app.add_url_rule('/flight/payment', 'payment', controller.payment, methods=['POST', 'GET'])
+app.add_url_rule('/flight/payment', 'payment', controller.payment, methods=['POST','GET'])
 
 
 @login.user_loader

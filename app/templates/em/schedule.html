@@ -153,6 +153,7 @@
       document.getElementById('successButton').click();
 
       let stop_airport_num = {{ Policy.stop_airport_max_number }}
+          console.log(stop_airport_num)
       let stop_airport_container =  document.getElementById('stop_airport_container')
         for (let i = 1;i<=stop_airport_num;i++) {
             stop_airport_container.innerHTML += `

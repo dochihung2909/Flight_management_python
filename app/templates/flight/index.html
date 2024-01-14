@@ -16,7 +16,7 @@
 </header>
 
 <div class="w-[80%] mx-auto grid grid-cols-5 gap-6">
-    <form id="customer_info_form" autocomplete="off" method="post" action="/flight/payment" class="col-span-3 w-full">
+    <form id="customer_info_form" autocomplete="off" class="col-span-3 w-full">
         <h1 class="text-[26px] my-[20px] font-semibold text-center">Thông tin khách hàng</h1>
         <div class="grid md:grid-cols-2 md:gap-6">
           <div class="relative z-0 w-full mb-5 group">
@@ -438,15 +438,18 @@
 <script src="{{ url_for('static', filename='js/common.js') }}"></script>
 <script>
 
-    let stop_airports = [
-                {% for p in stop_airports %}
-                    {
-                        'name': '{{ p["name"] }}',
-                        'location': '{{ p["location"] }}',
-                        'stop_time': '{{ p["stop_time"] }}'
-                    },
-                {% endfor %}
-            ]
+    let stop_airports = []
+    {% if stop_airports %}
+        stop_airports = [
+                    {% for p in stop_airports %}
+                        {
+                            'name': '{{ p["name"] }}',
+                            'location': '{{ p["location"] }}',
+                            'stop_time': '{{ p["stop_time"] }}'
+                        },
+                    {% endfor %}
+                ]
+    {% endif %}
     let business_seat_numbers = parseInt('{{ flight.business_seats }}')
     let economy_seat_numbers = parseInt('{{ flight.economy_seats }}')
         console.log(business_seat_numbers, economy_seat_numbers, '{{ flight.business_seats }}')
@@ -503,10 +506,18 @@
         })
 
     let form = document.getElementById('customer_info_form')
-
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', function(e) {
         e.preventDefault()
-
+        console.log(customer_lastname.value,
+                customer_firstname.value,
+                customer_phonenumber.value,
+                customer_email.value,
+                customer_dob.value,
+                sex.value,
+                country.value,
+                customer_id_number.value,
+                seat_type.value,
+                seat_number.value)
         fetch('/flight/payment', {
             method: 'post',
             body: JSON.stringify({
@@ -520,19 +531,19 @@
                 'customer_id_number':customer_id_number.value,
                 'seat_type':seat_type.value,
                 'seat_number':seat_number.value,
-                'flight_id': '{{ flight.flight_id }}',
                 'ticket_price': price
             }),
             headers: {
-                'Content-Type': "application/json"
-            }
+                'Content-Type': 'application/json'
+            },
+            data:{}
         }
         ).then(function (res) {
             return res.json()
         }).then(function (data) {
             console.log(data)
             if (data.status == '200') {
-                window.location.replace(data.route)
+                window.location.replace(`${data.route}`)
             }
         })
     })

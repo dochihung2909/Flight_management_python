@@ -18,7 +18,7 @@
 
 <div class="mt-6 grid grid-cols-5 md:gap-6 w-[80%] mx-auto">
     <div class="col-span-3 ">
-         <form class="w-full">
+     <form class="w-full">
         <label for="card-number-input" class="">Số thẻ tín dụng:</label>
         <div class="relative">
             <input type="text" id="card-number-input" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pe-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="4242 4242 4242 4242" pattern="^4[0-9]{12}(?:[0-9]{3})?$" required>
@@ -41,21 +41,25 @@
                 <input type="number" id="cvv-input" pattern="[0-9]{3}" aria-describedby="helper-text-explanation" class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="CVV" required>
             </div>
         </div>
-        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Thanh toán</button>
-    </form>
-        <div>
+         <div>
             <h1>Chi tiết giá</h1>
-            <div class="flex justify-between">
-                <p></p>
-                <p>{{  }}</p>
+            <div class="mb-2 border-[2px] border-gray-300 flex justify-between">
+                <p>{{ booking.seat_type }}</p>
+                <p id="price"></p>
+            </div>
+            <div class="mt-2 flex justify-between">
+                <p>{{ booking.seat_type }}</p>
+                <p id="price"></p>
             </div>
         </div>
+        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Thanh toán</button>
+    </form>
     </div>
 
     <div class="col-span-2 flex flex-col bg-gray-100 rounded-md relative">
         <div class="p-4">
             <h1 class="font-bold my-2">Mã đặt chỗ</h1>
-            <p></p>
+            <p>{{ booking.booking_id }}</p>
         </div>
 
         <div class="border-y-[2px] border-gray-300">
@@ -65,20 +69,25 @@
                     <div class="">
                         <h2 class="font-bold">Chuyến bay</h2>
                     </div>
-                    <p class="text-gray-500">14 thg 1, 2024</p>
+                    <p class="text-gray-500">{{ flight.departure_time}}</p>
                 </div>
                 <p class="font-semibold text-gray-500">
-                    • TP HCM(SGN) → Hồng Kông(HKG)
+                    • {{ flight.departure_airport_location}}({{ flight.departure_airport_name }}) → {{ flight.arrival_airport_location}}({{ flight.arrival_airport_name }})
                 </p>
             </div>
         </div>
 
         <div class="p-4">
             <h1 class="font-bold my-2">Khách hàng</h1>
-            <p>Do Chi Hung</p>
+            <p>{{ booking.user_name }}</p>
         </div>
     </div>
 </div>
+<script>
+    let price_block = document.getElementById('price')
 
+    price_block.innerText = '{{ booking.price }}'.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})
+
+</script>
 
 {% endblock %}

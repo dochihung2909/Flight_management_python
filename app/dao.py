@@ -33,9 +33,12 @@ def get_all_seat_type():
 def get_route():
     return Route.query.all()
 
-def get_policy():
-    p = Policy.query.first()
-    return p
+def get_policy(policy_id=None):
+    p = Policy.query
+    if policy_id:
+        p.filter(Policy.id.__eq__(policy_id))
+
+    return p.first()
 
 
 def add_stopairport(stop_airport, flight_id, airport_id):
@@ -130,7 +133,7 @@ def add_user(user, role = None):
 
     return u
 
-def get_flights(flight_id = None, route_id = None, start_date = None, end_date = None):
+def get_flights(flight_id = None, route_id = None, start_date = None):
     flights = Flight.query
 
     if route_id:

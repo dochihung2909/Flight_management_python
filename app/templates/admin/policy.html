@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin page</title>
+</head>
+
+
+{% extends 'admin/master.html' %}
+
+{% block body %}
+
+    <h1 class="mt-4 text-center">
+        Quản lý quy định
+    </h1>
+
+    <form id="policy_form" method="POST" action="/admin/policy" class="container py-4">
+        <div class="form-group">
+            <label for="max_airport_number">Số lượng sân bay tối đa</label>
+            <input type="number" class="form-control" name="max_airport_number" id="max_airport_number" value="{{ policy.airport_number }}" required aria-describedby="emailHelp" placeholder="Nguyễn Văn A">
+        </div>
+        <div class="form-group">
+            <label for="time_flight_limit">Thời gian bay tối thiểu</label>
+            <input type="number" class="form-control" name="time_flight_limit" id="time_flight_limit" value="{{ policy.time_flight_limit }}" required aria-describedby="emailHelp" placeholder="user123">
+        </div>
+        <div class="form-group">
+            <label for="stop_airport_number">Số lượng sân bay trung gian tối đa</label>
+            <input type="number" class="form-control" name="stop_airport_number" id="stop_airport_number" value="{{ policy.stop_airport_max_number }}" required aria-describedby="emailHelp" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="stop_time_minimum">Thời gian dừng tối thiểu</label>
+            <input type="number" class="form-control" name="stop_time_minimum" id="stop_time_minimum" value="{{ policy.stop_time_minimum }}" required aria-describedby="emailHelp" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="stop_time_maximum">Thời gian dừng tối đa</label>
+            <input type="number" class="form-control" name="stop_time_maximum" id="stop_time_maximum" value="{{ policy.stop_time_maximum }}" required aria-describedby="emailHelp" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="time_book_ticket">Thời gian được đặt vé</label>
+            <input type="number" class="form-control" name="time_book_ticket" id="time_book_ticket" value="{{ policy.time_book_ticket }}" required aria-describedby="emailHelp" placeholder="">
+        </div>
+
+        <div class="form-group">
+            <label for="time_sell_ticket">Thời gian được bán vé</label>
+            <input type="number" class="form-control" name="time_sell_ticket" id="time_sell_ticket" value="{{ policy.time_sell_ticket }}" required aria-describedby="emailHelp" placeholder="">
+            <span class="py-4 text-danger" id="error">
+            </span>
+            <span class="py-4 text-success" id="success">
+            </span>
+        </div>
+      <button type="submit" class="w-100 btn btn-primary">Cập nhật quy định</button>
+    </form>
+
+
+    <script>
+        let form = document.getElementById('policy_form')
+
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault()
+            fetch('/admin/policy/' + '{{ policy.id }}', {
+                method: 'post',
+                body: JSON.stringify({
+                    'max_airport_number': max_airport_number.value,
+                    'time_flight_limit': time_flight_limit.value,
+                    'stop_airport_max_number': stop_airport_number.value,
+                    'stop_time_minimum': stop_time_minimum.value,
+                    'stop_time_maximum': stop_time_maximum.value,
+                    'time_book_ticket': time_book_ticket.value,
+                    'time_sell_ticket': time_sell_ticket.value
+                }),
+                headers: {
+                    'Content-Type': "application/json"
+                }
+            }).then(function (res) {
+                return res.json()
+            }).then(function (data) {
+                console.log(data)
+            })
+        })
+
+    </script>
+
+{% endblock %}
