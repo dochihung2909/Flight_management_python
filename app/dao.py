@@ -30,8 +30,11 @@ def get_all_seat_type():
     return seat_types
 
 
-def get_route():
-    return Route.query.all()
+def get_route(route_id = None):
+    routes = Route.query
+    if route_id:
+        return routes.filter(Route.id.__eq__(route_id)).first()
+    return routes.all()
 
 def get_policy(policy_id=None):
     p = Policy.query
@@ -54,12 +57,17 @@ def get_stop_airport(flight_id):
         stop_airports = stop_airports.filter(StopAirport.flight_id.__eq__(flight_id))
     return stop_airports.all()
 
-def add_flight(flight, employee_id):
+def add_flight(flight, employee_id, is_update = None):
     if flight:
-        f = Flight(economy_price=flight.get('economy_price'), business_price=flight.get('business_price'),employee_id=employee_id,id=flight.get('flight_id'), departure_time=flight.get('departure_time'), time_flight=flight.get('time_flight'), economy_seats=flight.get('economy_seats'), business_seats=flight.get('business_seats'), route=flight.get('route'), aircraft=flight.get('aircraft'))
-        db.session.add(f)
-        db.session.commit()
-        return f
+        if is_update:
+            f = get_flights(flight.get(id))
+            f.update_from_params(params=flight)
+            db.session.commit()
+        else:
+            f = Flight(economy_price=flight.get('economy_price'), business_price=flight.get('business_price'),employee_id=employee_id,id=flight.get('flight_id'), departure_time=flight.get('departure_time'), time_flight=flight.get('time_flight'), economy_seats=flight.get('economy_seats'), business_seats=flight.get('business_seats'), route=flight.get('route'), aircraft=flight.get('aircraft'))
+            db.session.add(f)
+            db.session.commit()
+            return f
 
 
 def find_route(departure_airport = None, arrival_airport = None, id = None):
@@ -104,6 +112,14 @@ def get_seat(aircraft_id = None):
 
 def count_booking():
     return db.session.query(Booking.id).count()
+
+
+def count_stop_airport(flight_id: None):
+    if flight_id:
+        return db.session.query(StopAirport.flight_id).filter(StopAirport.flight_id.__eq__(flight_id)).count()
+
+    return db.session.query(StopAirport.id).count()
+
 
 def add_booking(booking = None):
     booking_id = f'B{count_booking():09d}'

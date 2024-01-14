@@ -39,8 +39,26 @@ def login_page():
 
 def create_schedule():
     flight_id = f'F{dao.count_flight():05d}'
-
     return render_template('/em/schedule.html', airports=dao.get_all_airport(), aircrafts=dao.get_aircraft(), flight_id=flight_id)
+
+
+
+def update_schedule(flight_id):
+    if request.method == 'POST':
+        flight = dao.get_flights(flight_id)
+        route = dao.get_route(route_id=flight.route)
+        departure_airport = dao.get_airport(airport_id=route.departure_airport_id)
+        arrival_airport = dao.get_airport(airport_id=route.arrival_airport_id)
+        aircraft = dao.get_aircraft(id=flight.aircraft)
+        stop_airports = dao.get_stop_airport(flight_id=flight_id)
+
+        stop_airports = [{
+            'airport_name': dao.get_airport(airport_id=ap.airport_id).name + " " + dao.get_airport(airport_id=ap.airport_id).location,
+            'stop_time': ap.stop_time,
+            'note': ap.note
+        } for ap in stop_airports]
+        print(stop_airports)
+        return render_template('/em/shedule_update.html', hour=flight.time_flight.hour ,minute = flight.time_flight.minute, airports=dao.get_all_airport(), aircrafts=dao.get_aircraft(), flight_id=flight_id, departure_airport=departure_airport, arrival_airport=arrival_airport, aircraft=aircraft,flight=flight, stop_airports=stop_airports)
 
 
 def employee_page(slug):
@@ -58,7 +76,14 @@ def employee_page(slug):
 def employee_login():
     if current_user.is_authenticated and current_user.user_role == UserRoleEnum.EMPLOYEE:
         flights = dao.get_flights(is_available=True)
-
+        flights = [{
+            'id': f.id,
+            'departure_time': f.departure_time,
+            'time_flight': f.time_flight,
+            'aircraft_name': dao.get_aircraft(id=f.aircraft).name,
+            'route_name': dao.get_route(f.route).name,
+            'stop_airport_numbers': dao.count_stop_airport(flight_id=f.id)
+        } for f in flights]
         return render_template('/em/index.html', flights=flights)
     return render_template('/login/index.html', title='Đăng nhập tài khoản nhân viên')
 
@@ -176,6 +201,48 @@ def add_employee():
         redirect('/')
         return jsonify({'status': 200})
 
+
+def update_flight(flight_id):
+    if flight_id:
+        try:
+            data = request.json
+            print(data, dao.get_airport(kw=data.get('departure_airport')), dao.get_airport(kw=data.get('arrival_airport')))
+            stop_airports_data = data.get('stop_airports')
+            print(stop_airports_data)
+            route_flight = dao.find_route(dao.get_airport(kw=data.get('departure_airport'))[0],
+                                          dao.get_airport(kw=data.get('arrival_airport'))[0]).id
+            print(route_flight)
+            if route_flight:
+                time_flight = time(int(data.get('flight_hours')), int(data.get('flight_minutes')))
+                aircraft = dao.get_aircraft(kw=data.get('aircraft'))[0]
+                print(aircraft)
+                business_seats = math.trunc(aircraft.capacity * (1 / 3))
+                economy_seats = aircraft.capacity - business_seats
+
+                flight = {
+                    'flight_id': flight_id,
+                    'departure_time': data.get('departure_time'),
+                    'time_flight': time_flight,
+                    'route': route_flight,
+                    'aircraft': aircraft.id,
+                    'economy_seats': economy_seats,
+                    'business_seats': business_seats,
+                    'economy_price': data.get('economy_price'),
+                    'business_price': data.get('business_price')
+                }
+                print(flight)
+                employee_id = current_user.id
+                if dao.add_flight(flight, employee_id, is_update=True):
+                    for stop_airport in stop_airports_data:
+                        airport = dao.get_airport(kw=stop_airport.get('name'))[0]
+                        print(airport.name)
+                        if airport:
+                            dao.add_stopairport(stop_airport, flight_id=flight.get('flight_id'), airport_id=airport.id)
+        except Exception as ex:
+            print(ex)
+            return jsonify({'status': 500, 'err_msg': 'Something wrong!'})
+        else:
+            return jsonify({'status': 200, 'flight_id': f'F{dao.count_flight():05d}'})
 
 def add_flight():
     if request.method == 'POST':

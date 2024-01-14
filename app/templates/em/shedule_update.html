@@ -19,7 +19,7 @@
 
 
 <h1 class="text-center my-4 text-[32px]">
-    Lập lịch chuyến bay
+    Cập nhật lịch chuyến bay
 </h1>
 
 <form  id="form_schedule" class="" action="{{ url_for('add_flight') }}" method="post">
@@ -32,13 +32,13 @@
 
   <div class="grid md:grid-cols-2 md:gap-6">
     <div class="relative z-0 w-full mb-5 group">
-        <input type="text" name="floating_first_name" id="departure_airport" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+        <input value="{{ departure_airport.name + " " + departure_airport.location }}" type="text" name="floating_first_name" id="departure_airport" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
         <label for="departure_airport" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
             Sân bay đi
         </label>
     </div>
     <div class="relative z-0 w-full mb-5 group">
-        <input type="text" name="floating_last_name" id="arrival_airport" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+        <input value="{{ arrival_airport.name + " " + arrival_airport.location }}" type="text" name="floating_last_name" id="arrival_airport" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
         <label for="arrival_airport" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
             Sân bay đến
         </label>
@@ -46,7 +46,7 @@
   </div>
   <div class="">
     <div class="relative z-0 w-full mb-5 group">
-        <input type="text" name="floating_first_name" id="aircraft" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+        <input value="{{ aircraft.name }}" type="text" name="floating_first_name" id="aircraft" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
         <label for="aircraft" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
             Máy bay
         </label>
@@ -55,20 +55,20 @@
 
     <div class="grid md:grid-cols-2 md:gap-6">
         <div class="relative z-0 w-full mb-5 group">
-            <input autocomplete="off" type="number" name="economy_price" id="economy_price" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+            <input value="{{ flight.economy_price }}" autocomplete="off" type="number" name="economy_price" id="economy_price" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
             <label for="economy_price" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                 Giá vé phổ thông
             </label>
         </div>
         <div class="relative z-0 w-full mb-5 group">
-            <input autocomplete="off"  type="number" name="business_price" id="business_price" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+            <input value="{{ flight.business_price }}" autocomplete="off"  type="number" name="business_price" id="business_price" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
             <label for="business_price" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                 Giá vé thương gia
             </label>
         </div>
     </div>
   <div class="relative z-0 w-full mb-5 group">
-        <input autocomplete="off" type="datetime-local" name="departure_time" id="departure_time" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+        <input value="{{ flight.departure_time }}" autocomplete="off" type="datetime-local" name="departure_time" id="departure_time" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
         <label for="departure_time" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
             Ngày giờ
         </label>
@@ -82,7 +82,7 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                     </svg>
                 </button>
-                <input autocomplete="off" name="flight_hours" type="text" id="flight_hours" data-input-counter data-input-counter-min="0" data-input-counter-max="24" aria-describedby="helper-text-explanation" class="pb-6 bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" value="0" required>
+                <input autocomplete="off" name="flight_hours" type="text" id="flight_hours" data-input-counter data-input-counter-min="0" data-input-counter-max="24" aria-describedby="helper-text-explanation" class="pb-6 bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" value="{{ hour }}" required>
                 <div class="absolute bottom-1 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 flex items-center text-xs text-gray-400 space-x-1 rtl:space-x-reverse">
                     <span>Giờ</span>
                 </div>
@@ -100,7 +100,7 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                     </svg>
                 </button>
-                <input autocomplete="off" name="flight_minutes" type="text" id="flight_minutes" data-input-counter data-input-counter-min="0" data-input-counter-max="60" aria-describedby="helper-text-explanation" class="pb-6 bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" value="30" required>
+                <input autocomplete="off" name="flight_minutes" type="text" id="flight_minutes" data-input-counter data-input-counter-min="0" data-input-counter-max="60" aria-describedby="helper-text-explanation" class="pb-6 bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" value="{{ minute }}" required>
                 <div class="absolute bottom-1 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 flex items-center text-xs text-gray-400 space-x-1 rtl:space-x-reverse">
                     <span>Phút</span>
                 </div>
@@ -115,7 +115,7 @@
     <div id="stop_airport_container" class="">
     </div>
     <div class="flex">
-        <button type="submit" class="flex-1 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Thêm chuyến bay</button>
+        <button type="submit" class="flex-1 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Cập nhật chuyến bay</button>
     </div>
 </form>
 
@@ -154,14 +154,29 @@
 
     document.getElementsByName("departure_time")[0].min = today;
 
+
+        var s_airports = [
+            {% for p in stop_airports %}
+          {
+              'name': '{{p.airport_name}}',
+              'stop_time': '{{p.stop_time}}',
+              'note': '{{p.note}}'
+          }
+            {% endfor %}
+        ];
       let stop_airport_num = {{ Policy.stop_airport_max_number }}
-          console.log(stop_airport_num)
       let stop_airport_container =  document.getElementById('stop_airport_container')
         for (let i = 1;i<=stop_airport_num;i++) {
+            airport = s_airports[i-1] || {
+                'name': '',
+                'stop_time': '20',
+                'note': ''
+            }
+            console.log(airport)
             stop_airport_container.innerHTML += `
                 <div class="grid grid-cols-5 md:gap-6 mb-5 items-end airport_block">
                     <div class="col-span-2 relative z-0 w-full mb-5 group">
-                        <input autocomplete="off" type="text" name="stop_airport_${i}" id="stop_airport_${i}" class="airport_name block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+                        <input value="${airport.name}" autocomplete="off" type="text" name="stop_airport_${i}" id="stop_airport_${i}" class="airport_name block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
                         <label for="stop_airport_${i}" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                             Sân bay trung gian ${i}
                         </label>
@@ -172,7 +187,7 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                             </svg>
                         </button>
-                        <input autocomplete="off" name="stop_airport_${i}_stop_time" type="text" id="stop_airport_${i}_stop_time" data-input-counter data-input-counter-min="{{ Policy.stop_time_minimum }}" data-input-counter-max="{{ Policy.stop_time_maximum }}" aria-describedby="helper-text-explanation" class="stop_time pb-6 bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" value="20">
+                        <input autocomplete="off" name="stop_airport_${i}_stop_time" type="text" id="stop_airport_${i}_stop_time" data-input-counter data-input-counter-min="{{ Policy.stop_time_minimum }}" data-input-counter-max="{{ Policy.stop_time_maximum }}" aria-describedby="helper-text-explanation" class="stop_time pb-6 bg-gray-50 border-x-0 border-gray-300 h-11 font-medium text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" value="${airport.stop_time}">
                         <div class="absolute bottom-1 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 flex items-center text-xs text-gray-400 space-x-1 rtl:space-x-reverse">
                             <span>Phút</span>
                         </div>
@@ -184,7 +199,7 @@
                     </div>
                     <div class="col-span-2 ">
                         <label for="stop_airport_${i}_note" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ghi chú</label>
-                        <textarea maxlength="500" id="stop_airport_${i}_note" name="stop_airport_${i}_note" rows="2" class="stop_airport_note block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ghi chú trạm dừng..."></textarea>
+                        <textarea value="${airport.note}" maxlength="500" id="stop_airport_${i}_note" name="stop_airport_${i}_note" rows="2" class="stop_airport_note block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ghi chú trạm dừng..."></textarea>
                     </div>
                 </div>
             `
@@ -261,7 +276,7 @@
                     })
             })
             console.log(stop_airports)
-            fetch('/api/flight', {
+            fetch('/api/flight/{{ flight_id }}', {
                 method: 'post',
                 body: JSON.stringify({
                     'departure_time': document.getElementById('departure_time').value,
@@ -291,13 +306,6 @@
                 })
         })
     });
-
-
-
-
-
-
-
 </script>
 
 {% endblock %}

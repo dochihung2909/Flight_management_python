@@ -79,6 +79,11 @@ class Flight(BaseModel):
     stop_airport = relationship('StopAirport', backref='flight_stop_airport')
     booking = relationship('Booking', backref='flight_booking')
 
+    def update_from_params(self, params):
+        # Duyệt qua từng thuộc tính trong từ điển params và cập nhật giá trị tương ứng trong đối tượng Policy
+        for key, value in params.items():
+            setattr(self, key, value)
+
 
 class Payment(BaseModel):
 
