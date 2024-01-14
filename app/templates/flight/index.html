@@ -479,9 +479,7 @@
             price = '{{ flight.business_price }}'
         }
         seat_number_container.innerHTML = `<option selected>Số ghế</option> ${seat_html_string}`
-        price = Number(price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'})
-        price_block.innerHTML = price
-        console.log(typeof Number(price), price)
+        price_block.innerHTML = Number(price).toLocaleString('it-IT', {style : 'currency', currency : 'VND'})
     })
 
     seat_number_container.addEventListener('change', (e) => {
@@ -531,7 +529,8 @@
                 'customer_id_number':customer_id_number.value,
                 'seat_type':seat_type.value,
                 'seat_number':seat_number.value,
-                'ticket_price': price
+                'ticket_price': price,
+                'flight_id': '{{ flight.flight_id }}'
             }),
             headers: {
                 'Content-Type': 'application/json'

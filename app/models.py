@@ -34,21 +34,6 @@ class User(BaseModel, UserMixin):
     flight = relationship('Flight', backref='employee_flight')
 
 
-class Booking(BaseModel):
-
-    first_name = Column(String(50))
-    last_name = Column(String(50))
-    dob = Column(Date)
-    sex = Column(Boolean)
-    phone_number = Column(String(50))
-    citizen_id = Column(String(50))
-    email = Column(String(50))
-    booking_date = Column(DateTime)
-    customer_id = Column(String(50), ForeignKey(User.id), nullable=True)
-    status = Column(Boolean, default=False)
-    ticket = relationship('Ticket', backref='booking_ticket')
-
-
 class Aircraft(db.Model):
     __tablename__ = 'aircraft'
 
@@ -92,7 +77,32 @@ class Flight(BaseModel):
     aircraft = Column(String(50), ForeignKey(Aircraft.id), nullable=False)
     employee_id = Column(String(50), ForeignKey(User.id), nullable=False)
     stop_airport = relationship('StopAirport', backref='flight_stop_airport')
-    ticket = relationship('Ticket', backref='flight_ticket')
+    booking = relationship('Booking', backref='flight_booking')
+
+
+class Payment(BaseModel):
+
+    card_number = Column(String(20), unique=True)
+    expire_date = Column(Date)
+    cvv_code = Column(String(3))
+    booking = relationship('Booking', backref='payment_booking', uselist=False)
+
+
+class Booking(BaseModel):
+
+    first_name = Column(String(50))
+    last_name = Column(String(50))
+    dob = Column(Date)
+    sex = Column(Boolean)
+    phone_number = Column(String(50))
+    citizen_id = Column(String(50))
+    email = Column(String(50))
+    booking_date = Column(DateTime)
+    customer_id = Column(String(50), ForeignKey(User.id), nullable=False)
+    flight_id = Column(String(50), ForeignKey(Flight.id), nullable=False)
+    status = Column(Boolean, default=False)
+    ticket = relationship('Ticket', backref='booking_ticket')
+    payment_id = Column(String(50), ForeignKey(Payment.id), nullable=True)
 
 
 class Seat(db.Model):
@@ -109,9 +119,9 @@ class Ticket(BaseModel):
     __tablename__ = 'ticket'
 
     fly_date = Column(DateTime)
-    flight_id = Column(String(50), ForeignKey(Flight.id), nullable=False)
     seat_id = Column(String(50), ForeignKey(Seat.id), nullable=False)
     booking_id = Column(String(50), ForeignKey(Booking.id), nullable=False)
+    price = Column(Double)
 
 
 class StopAirport(db.Model):
@@ -121,6 +131,7 @@ class StopAirport(db.Model):
     airport_id = Column(String(50), ForeignKey(Airport.id), primary_key=True)
     stop_time = Column(Integer)
     note = Column(String(500))
+
 
 
 class Policy(BaseModel):
@@ -160,57 +171,57 @@ def create_seats_for_aircraft(aircraft):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-        # import hashlib
-        # u1 = User(id='ADMIN00001', username='hungts', password=hashlib.md5('123456'.encode('utf-8')).hexdigest(), name='Do Chi Hung', user_role=UserRoleEnum.ADMIN)
-        #
-        # airports = [
-        #     Airport(id='AP00001', name='Tân Sơn Nhất', location='Ho Chi Minh City'),
-        #     Airport(id='AP00002', name='Nội Bài', location='Hà Nội'),
-        #     Airport(id='AP00003', name='Đà Nẵng', location='Đà Nẵng'),
-        #     Airport(id='AP00004', name='Cam Ranh', location='Khánh Hòa'),
-        #     Airport(id='AP00006', name='Cần Thơ', location='Cần Thơ'),
-        #     Airport(id='AF00001', name='Heathrow Airport', location='London'),
-        #     Airport(id='AF00002', name='Charles de Gaulle Airport', location='Paris'),
-        #     Airport(id='AF00003', name='Los Angeles International Airport', location='Los Angeles'),
-        #     Airport(id='AF00004', name='Narita International Airport', location='Tokyo'),
-        #     Airport(id='AF00006', name='Sydney Airport', location='Sydney'),
-        # ]
-        #
-        # aircrafts = [
-        #     Aircraft(id='AC00001', name='Boeing 737', manufacturer='Boeing', capacity=75),
-        #     Aircraft(id='AC00004', name='Embraer E190', manufacturer='Embraer', capacity=50),
-        #     Aircraft(id='AC00005', name='Airbus A350', manufacturer='Airbus', capacity=100),
-        #     Aircraft(id='AC00006', name='Bombardier CRJ900', manufacturer='Bombardier', capacity=60),
-        #     Aircraft(id='AC00010', name='ATR 72', manufacturer='ATR', capacity=40)
-        # ]
-        #
-        # p1 = Policy(id='P00001', airport_number=10, time_flight_limit=30, stop_airport_max_number=2, stop_time_minimum=20, stop_time_maximum=30, time_book_ticket=12, time_sell_ticket=4)
-        #
-        #
-        #
-        # routes = []
-        # for i in range(len(airports) - 1):
-        #     for j in range(len(airports)):
-        #         if airports[i].id != airports[j].id:
-        #             route = Route(
-        #                 id=f"Route_{airports[i].id}_{airports[j].id}",
-        #                 name=f'{airports[i].location} - {airports[j].location}',
-        #                 departure_airport_id=airports[i].id,
-        #                 arrival_airport_id=airports[j].id
-        #             )
-        #             routes.append(route)
-        #
-        #
-        # # Hiển thị các tuyến bay đã tạo
-        # # for route in routes:
-        # #     print(route.id, route.departure_airport_id, route.arrival_airport_id, next((airport for airport in airports if airport.id == route.departure_airport_id), None).name)
-        # db.session.add(p1)
-        # db.session.add_all(airports)
-        # db.session.add_all(routes)
-        # db.session.add_all(aircrafts)
-        # db.session.add(u1)
-        # db.session.commit()
-        #
-        # for aircraft in aircrafts:
-        #     create_seats_for_aircraft(aircraft)
+        import hashlib
+        u1 = User(id='ADMIN00001', username='hungts', password=hashlib.md5('123456'.encode('utf-8')).hexdigest(), name='Do Chi Hung', user_role=UserRoleEnum.ADMIN)
+
+        airports = [
+            Airport(id='AP00001', name='Tân Sơn Nhất', location='Ho Chi Minh City'),
+            Airport(id='AP00002', name='Nội Bài', location='Hà Nội'),
+            Airport(id='AP00003', name='Đà Nẵng', location='Đà Nẵng'),
+            Airport(id='AP00004', name='Cam Ranh', location='Khánh Hòa'),
+            Airport(id='AP00006', name='Cần Thơ', location='Cần Thơ'),
+            Airport(id='AF00001', name='Heathrow Airport', location='London'),
+            Airport(id='AF00002', name='Charles de Gaulle Airport', location='Paris'),
+            Airport(id='AF00003', name='Los Angeles International Airport', location='Los Angeles'),
+            Airport(id='AF00004', name='Narita International Airport', location='Tokyo'),
+            Airport(id='AF00006', name='Sydney Airport', location='Sydney'),
+        ]
+
+        aircrafts = [
+            Aircraft(id='AC00001', name='Boeing 737', manufacturer='Boeing', capacity=75),
+            Aircraft(id='AC00004', name='Embraer E190', manufacturer='Embraer', capacity=50),
+            Aircraft(id='AC00005', name='Airbus A350', manufacturer='Airbus', capacity=100),
+            Aircraft(id='AC00006', name='Bombardier CRJ900', manufacturer='Bombardier', capacity=60),
+            Aircraft(id='AC00010', name='ATR 72', manufacturer='ATR', capacity=40)
+        ]
+
+        p1 = Policy(id='P00001', airport_number=10, time_flight_limit=30, stop_airport_max_number=2, stop_time_minimum=20, stop_time_maximum=30, time_book_ticket=12, time_sell_ticket=4)
+
+
+
+        routes = []
+        for i in range(len(airports) - 1):
+            for j in range(len(airports)):
+                if airports[i].id != airports[j].id:
+                    route = Route(
+                        id=f"Route_{airports[i].id}_{airports[j].id}",
+                        name=f'{airports[i].location} - {airports[j].location}',
+                        departure_airport_id=airports[i].id,
+                        arrival_airport_id=airports[j].id
+                    )
+                    routes.append(route)
+
+
+        # Hiển thị các tuyến bay đã tạo
+        # for route in routes:
+        #     print(route.id, route.departure_airport_id, route.arrival_airport_id, next((airport for airport in airports if airport.id == route.departure_airport_id), None).name)
+        db.session.add(p1)
+        db.session.add_all(airports)
+        db.session.add_all(routes)
+        db.session.add_all(aircrafts)
+        db.session.add(u1)
+        db.session.commit()
+
+        for aircraft in aircrafts:
+            create_seats_for_aircraft(aircraft)
 

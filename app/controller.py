@@ -1,5 +1,7 @@
 import json
 
+import requests, stripe
+
 from app import app, dao, models, db
 from app.models import UserRoleEnum, SeatRoleEnum, Policy
 from flask import render_template, request, redirect, jsonify, current_app, session
@@ -17,6 +19,8 @@ from sqlalchemy import update
 
 
 def home():
+    if not current_user.is_authenticated:
+        return login()
     airports = dao.get_all_airport()
     seat_types = dao.get_all_seat_type()
     return render_template('frontpage.html', airports=airports, seat_types=seat_types)
@@ -107,6 +111,14 @@ def logout():
 
     return redirect(request.args.get('next') or '/')
 
+def subscribe(user_email, email_list, api_key):
+  return requests.post(
+        "https://api.mailgun.net/v3/lists/"+email_list+"/members",
+        auth=('api', api_key),
+        data={'subscribed': True,
+              'address': user_email,})
+
+
 def signup():
     if request.method == 'POST':
         try:
@@ -120,6 +132,7 @@ def signup():
                 user = {
                     'name': data.get('name'),
                     'user_id': user_id,
+                    'email': data.get('email'),
                     'username': data.get('username'),
                     'password': password,
                 }
@@ -132,7 +145,6 @@ def signup():
         else:
             return jsonify({'status': 200})
     else:
-
         return render_template('/login/signup.html')
 
 @login_required
@@ -316,12 +328,12 @@ def payment():
                 'sex': sex,
                 'phone_number': data.get('customer_phonenumber'),
                 'citizen_id': data.get('customer_id_number'),
-                'email': data.get('customer_email')
+                'email': data.get('customer_email'),
+                'customer_id': current_user.id,
+                'flight_id': data.get('flight_id')
             }
-            if (current_user.is_authenticated):
-                customer_id = current_user.id
             print(booking)
-            b = dao.add_booking(booking=booking, customer_id=customer_id)
+            b = dao.add_booking(booking=booking)
             if b:
                 session['ticket'] = {
                     'booking_id': b.id,
@@ -348,6 +360,32 @@ def payment():
     return 'You dont have permision to this route'
 
 
+def checkout():
+    try:
+        if request.method == 'POST':
+            ticket = session['ticket']
+            data = request.json
+
+            expiry_date_python = datetime.strptime(data.get('card_expiration')[:10], "%Y-%m-%d").date()
+            if (ticket):
+                flight = session['flight']
+                ticket['fly_date'] = flight.get('departure_time')
+                print(ticket)
+                print(flight)
+                payment_info = {
+                    'card_number': data.get('card_number'),
+                    'expire_date': expiry_date_python,
+                    'cvv_code': data.get('cvv_code')
+                }
+                p = dao.add_payment(payment_info)
+                if p:
+                    dao.add_ticket(ticket=ticket, payment_id=p.id)
+                    print('Success')
+    except Exception as ex:
+        print(ex)
+        return jsonify({'status': 500, 'message': 'Something went wrong'})
+    else:
+        return jsonify({'status': 200, 'message': 'success', 'route': '/'})
 
 @login_required
 def update_policy(policy_id):

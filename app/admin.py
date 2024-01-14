@@ -65,6 +65,13 @@ class PolicyManagement(AuthenticatedAdmin):
     def index(self):
         return self.render('admin/policy.html', policy=dao.get_policy())
 
+
+class StatsView(AuthenticatedAdmin):
+    @expose('/')
+    def index(self):
+        return self.render('admin/stats.html')
+
+
 admin.add_view(FlightViewModel(Flight, db.session))
 admin.add_view(AuthenticatedEmployee(Aircraft, db.session))
 admin.add_view(AuthenticatedEmployee(Airport, db.session))

@@ -23,6 +23,7 @@ app.add_url_rule('/em/sell_ticket', 'employee_sell_ticket', controller.sell_tick
 app.add_url_rule('/api/flight', 'add_flight', controller.add_flight, methods=['POST', 'GET'])
 app.add_url_rule('/flight', 'flight_view', controller.flight_booking, methods=['POST', 'GET'])
 app.add_url_rule('/flight/payment', 'payment', controller.payment, methods=['POST','GET'])
+app.add_url_rule('/api/checkout', 'checkout_ticket', controller.checkout, methods=['POST'])
 
 
 @login.user_loader

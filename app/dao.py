@@ -1,5 +1,5 @@
 import hashlib
-from app.models import User, Airport, SeatRoleEnum, Flight, Route, Aircraft, UserRoleEnum,Policy, StopAirport, Seat, Booking
+from app.models import User, Airport, SeatRoleEnum, Flight, Route, Aircraft, UserRoleEnum,Policy, StopAirport, Seat, Booking, Ticket, Payment
 from app import db, dao
 from sqlalchemy import cast, Date
 from datetime import datetime, time
@@ -105,16 +105,33 @@ def get_seat(aircraft_id = None):
 def count_booking():
     return db.session.query(Booking.id).count()
 
-def add_booking(booking = None, customer_id=None):
+def add_booking(booking = None):
     booking_id = f'B{count_booking():09d}'
-    b = Booking(id=booking_id, first_name= booking.get('first_name'),last_name = booking.get('last_name'),dob= booking.get('dob'),sex= booking.get('sex'),phone_number= booking.get('phone_number'),citizen_id= booking.get('citizen_id'),email= booking.get('email'),booking_date = datetime.today())
+    b = Booking(flight_id=booking.get('flight_id'),customer_id=booking.get('customer_id'), id=booking_id, first_name= booking.get('first_name'),last_name = booking.get('last_name'),dob= booking.get('dob'),sex= booking.get('sex'),phone_number= booking.get('phone_number'),citizen_id= booking.get('citizen_id'),email= booking.get('email'),booking_date = datetime.today())
 
     if b:
-        if customer_id:
-            b.customer_id = customer_id
         db.session.add(b)
         db.session.commit()
     return b
+
+def get_booking(booking_id = None):
+    booking = Booking.query
+
+    if booking_id:
+        return booking.filter(Booking.id.__eq__(booking_id)).first()
+
+    return booking.all()
+def add_ticket(ticket = None, payment_id = None):
+    ticket_id = f'T{count_booking():09d}'
+    tk = Ticket(id=ticket_id, booking_id = ticket.get('booking_id'), fly_date=ticket.get('fly_date'), seat_id=ticket.get('seat_number'), price=ticket.get('price'))
+
+    if tk:
+        booking = get_booking(booking_id=ticket.get('booking_id'))
+        booking.status = True
+        booking.payment_id = payment_id
+        db.session.add(tk)
+        db.session.commit()
+    return tk
 
 def count_flight():
     return db.session.query(Flight.id).count()
@@ -145,10 +162,31 @@ def get_flights(flight_id = None, route_id = None, start_date = None):
     return flights.all()
 
 
+def count_payment():
+    return db.session.query(Payment.id).count()
+
+def add_payment(payment = None):
+    id = f'T{count_payment():09d}'
+    p = Payment(id=id,card_number=payment.get('card_number'), expire_date=payment.get('expire_date'), cvv_code=payment.get('cvv_code'))
+
+    if p:
+        db.session.add(p)
+        db.session.commit()
+        return p
+
+
 def serialize_datetime(obj):
     if isinstance(obj, datetime):
         return obj.isoformat()
     raise TypeError("Type not serializable")
+
+
+def stats_revenue_flight(flight_id = None):
+    booking = Booking.query.filter(Booking.status == True)
+
+    # for b in booking:
+
+
 
 def custom_serializer(obj):
     if isinstance(obj, datetime):
