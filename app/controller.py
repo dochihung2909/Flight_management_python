@@ -57,7 +57,9 @@ def employee_page(slug):
 @login_required
 def employee_login():
     if current_user.is_authenticated and current_user.user_role == UserRoleEnum.EMPLOYEE:
-        return render_template('/em/index.html')
+        flights = dao.get_flights(is_available=True)
+
+        return render_template('/em/index.html', flights=flights)
     return render_template('/login/index.html', title='Đăng nhập tài khoản nhân viên')
 
 
@@ -254,7 +256,11 @@ def add_flight():
                         })
                 print(f)
                 p = dao.get_policy()
-                if ((flight.departure_time - current_date).total_seconds() / 3600 > p.time_book_ticket):
+                if current_user.user_role == UserRoleEnum.CUSTOMER:
+                    time_limit = p.time_book_ticket
+                else:
+                    time_limit = p.time_sell_ticket
+                if ((flight.departure_time - current_date).total_seconds() / 3600 > time_limit):
                     flights.append(f)
         except Exception as ex:
             print(ex)
@@ -381,6 +387,7 @@ def checkout():
                 if p:
                     dao.add_ticket(ticket=ticket, payment_id=p.id)
                     print('Success')
+                    session.clear()
     except Exception as ex:
         print(ex)
         return jsonify({'status': 500, 'message': 'Something went wrong'})

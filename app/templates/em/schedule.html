@@ -152,8 +152,11 @@
     document.addEventListener("DOMContentLoaded", function(event) {
       document.getElementById('successButton').click();
 
+      var today = new Date().toISOString().slice(0, 16);
+
+    document.getElementsByName("departure_time")[0].min = today;
+
       let stop_airport_num = {{ Policy.stop_airport_max_number }}
-          console.log(stop_airport_num)
       let stop_airport_container =  document.getElementById('stop_airport_container')
         for (let i = 1;i<=stop_airport_num;i++) {
             stop_airport_container.innerHTML += `
@@ -217,20 +220,16 @@
                 source: availableAircrafts
             })
 
-            $('#stop_airport_1').autocomplete({
+            $('.airport_name').autocomplete({
                 source: availableTags,
                 select: function (e, ui) {},
                 change: function( event, ui ) {}
             })
 
-            $('#stop_airport_2').autocomplete({
-                source: availableTags
-            })
-
-            $('#stop_airport_1').on('autocompletechange', function (e, ui) {
+            $('.airport_name').on('autocompletechange', function (e, ui) {
                 availableStopAirports = availableTags.filter((airport) => (airport != this.value && airport != departure_airport.value && airport != arrival_airport.value))
                 console.log(availableStopAirports)
-                $('#stop_airport_2').autocomplete( "option", "source", availableStopAirports)
+                $('.airport_name').autocomplete( "option", "source", availableStopAirports)
             })
 
             $( "#departure_airport" ).on('autocompletechange', function( e, ui ) {
@@ -242,7 +241,7 @@
             $( "#arrival_airport" ).on('autocompletechange', function( e, ui ) {
                 availableStopAirports = availableTags.filter((airport) => (airport != this.value && airport != departure_airport.value))
                 console.log(availableStopAirports)
-                $('#stop_airport_1').autocomplete( "option", "source", availableStopAirports)
+                $('.airport_name').autocomplete( "option", "source", availableStopAirports)
             })
         } );
 

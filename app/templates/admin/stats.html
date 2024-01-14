@@ -1,5 +1,90 @@
 {% extends 'admin/master.html' %}
 
 {% block body %}
+<div class="container">
+    <h1 class="text-center my-4" style="font-weight: 600; text-shadow: 3px 3px 5px grey; color: #394353">Báo cáo - Thống kê</h1>
+    <div class="row mb-5">
+        <div class="col-md-4 col-sm-12">
+            <form>
+                <div class="form-group">
+                    <label>Từ ngày</label>
+                    <input type="date" name="from_date" class="form-control" required/>
+                </div>
+                <div class="form-group">
+                    <label>Đến ngày</label>
+                    <input type="date" name="to_date" class="form-control" required/>
+                </div>
+                <div>
+                    <input type="submit" value="Lọc dữ liệu" class="btn btn-info"/>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-8 col-sm-12">
+            <table class="table" border>
+                <tr>
+                    <th>Id</th>
+                    <th>Tên tuyến bay</th>
+                    <th>Doanh thu</th>
+                    <th>Số lượt bay</th>
+                </tr>
+                {% for s in stats %}
+                <tr>
+                    <td>{{ s[0] }}</td>
+                    <td>{{ s[1] }}</td>
+                    {% if s[3] %}
+                    <td>{{ "{:,.1f}".format(s[3]) }} VNĐ</td>
+                    {% else %}
+                    <td>0 VNĐ</td>
+                    {% endif %}
+                    <td>{{s[2]}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
 
+    </div>
+    <div class="row mb-5">
+        <div class="col-md-6 col-sm-12">
+            <canvas id="revenueStats"></canvas>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <canvas id="cateStats" ></canvas>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/my-stats.js') }}"></script>
+<script>
+window.onload = function() {
+  const ctx = document.getElementById('myChart');
+
+  let data = [];
+  let labels = [];
+
+  {% for s in stats %}
+  labels.push('{{s[0]}}')
+  data.push({{s[1]}});
+  {% endfor %}
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: '# Doanh thu',
+        data: data,
+        borderWidth: 1,
+        backgroundColor: ['red', 'green', 'blue', 'gold', 'silver']
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+</script>
 {% endblock %}

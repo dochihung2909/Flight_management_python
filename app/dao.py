@@ -1,7 +1,7 @@
 import hashlib
 from app.models import User, Airport, SeatRoleEnum, Flight, Route, Aircraft, UserRoleEnum,Policy, StopAirport, Seat, Booking, Ticket, Payment
 from app import db, dao
-from sqlalchemy import cast, Date
+from sqlalchemy import cast, Date, func
 from datetime import datetime, time
 
 
@@ -150,7 +150,7 @@ def add_user(user, role = None):
 
     return u
 
-def get_flights(flight_id = None, route_id = None, start_date = None):
+def get_flights(flight_id = None, route_id = None, start_date = None, is_available = None):
     flights = Flight.query
 
     if route_id:
@@ -158,6 +158,8 @@ def get_flights(flight_id = None, route_id = None, start_date = None):
     if flight_id:
         flights = flights.filter(Flight.id.__eq__(flight_id)).first()
         return flights
+    if is_available:
+        flights = flights.filter(Flight.departure_time > datetime.today())
 
     return flights.all()
 
@@ -175,6 +177,11 @@ def add_payment(payment = None):
         return p
 
 
+# def get_available_seat(flight_id = None):
+#     if flight_id:
+#         seat = db.session.query(Booking.flight_id).join(Ticket, Ticket.seat_id)
+
+
 def serialize_datetime(obj):
     if isinstance(obj, datetime):
         return obj.isoformat()
@@ -182,9 +189,25 @@ def serialize_datetime(obj):
 
 
 def stats_revenue_flight(flight_id = None):
-    booking = Booking.query.filter(Booking.status == True)
 
-    # for b in booking:
+    stats = (db.session.query(Booking.flight_id, func.sum(Ticket.price).label('total_price'))
+            .join(Flight, Booking.flight_id == Flight.id)
+            .join(Ticket, Ticket.booking_id == Booking.id))
+    if flight_id:
+        stats = (stats.filter(Booking.status == 1, Booking.flight_id.__eq__(flight_id))
+            .group_by(Booking.flight_id))
+    return (stats.filter(Booking.status == 1)
+            .group_by(Booking.flight_id).all())
+
+
+def stats_revenue_route(from_date = None, to_date = None):
+    query = (db.session.query(Route.id, Route.name, func.count(Flight.id), func.sum(Ticket.price).label('total_price'))
+    .join(Flight, Flight.route == Route.id)
+    .join(Booking, Booking.flight_id == Flight.id)
+    .join(Ticket, Ticket.booking_id == Booking.id))
+    if from_date != None and to_date != None:
+        query = query.filter(Flight.departure_time.cast(Date) >= from_date, Flight.departure_time.cast(Date) <= to_date)
+    return ( query.group_by(Route.id).all())
 
 
 
