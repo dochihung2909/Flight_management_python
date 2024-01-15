@@ -4,7 +4,8 @@ from sqlalchemy.future import engine
 from app import app, controller, dao, db, login, principals
 from flask_principal import Principal, identity_loaded, UserNeed, RoleNeed, Permission
 from app.models import User, UserRoleEnum
-
+from app import admin
+from app import app
 # This is a sample Python script.
 
 # Press Shift+F10 to execute it or replace it with your code.

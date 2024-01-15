@@ -58,7 +58,7 @@ async function search_flight(queryString) {
                             <div class="text-[22px] text-orange-500 mx-2 flex flex-col"> 
                               <p class="font-bold">${f.economy_price.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}</p>
                             </div>
-                            <button onclick="book_flight('${f.id}', '${abbreviateWords(f.departure_airport.name)}', '${f.departure_airport.location}', '${abbreviateWords(f.arrival_airport.name)}', '${f.arrival_airport.name}', '${f.departure_time.split(' ')[1].slice(0,5)}', '${arrivial_time.getHours()}:${arrivial_time.getMinutes()}')" class="w-32 h-11 rounded flex border-solid border font-bold text-white bg-blue-600 mx-2 justify-center place-items-center items-center">
+                            <button onclick="book_flight('${f.id}', '${abbreviateWords(f.departure_airport.name)}', '${f.departure_airport.location}', '${abbreviateWords(f.arrival_airport.name)}', '${f.arrival_airport.location}', '${f.departure_time.split(' ')[1].slice(0,5)}', '${arrivial_time.getHours()}:${arrivial_time.getMinutes()}')" class="w-32 h-11 rounded flex border-solid border font-bold text-white bg-blue-600 mx-2 justify-center place-items-center items-center">
                                 <div class="">Đặt vé</div>
                             </button>
                           </div>

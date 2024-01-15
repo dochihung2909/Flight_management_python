@@ -452,7 +452,8 @@ def checkout():
                 if p:
                     dao.add_ticket(ticket=ticket, payment_id=p.id)
                     print('Success')
-                    session.clear()
+                    session.pop('flight', None)
+                    session.pop('ticket', None)
     except Exception as ex:
         print(ex)
         return jsonify({'status': 500, 'message': 'Something went wrong'})
