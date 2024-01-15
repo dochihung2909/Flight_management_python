@@ -75,11 +75,15 @@ class StatsView(AuthenticatedAdmin):
         to_date = data.get('to_date')
         print(from_date, to_date)
         stats = dao.stats_revenue_route()
+        month_year = data.get('month_year')
+        if month_year:
+            month_year_obj  = datetime.strptime(month_year, '%Y-%m')
+            month = month_year_obj.month
+            year = month_year_obj.year
+            stats = dao.stats_revenue_route_by_month(year=year, month=month)
         if from_date:
             from_date = datetime.strptime(from_date + ' 00:00:00', '%Y-%m-%d %H:%M:%S')
             to_date = datetime.strptime(to_date + ' 00:00:00', '%Y-%m-%d %H:%M:%S')
-            stats_by_month = dao.stats_revenue_route_by_month(year=from_date.year, month=from_date.month)
-            print(stats_by_month)
             stats = dao.stats_revenue_route(from_date=from_date, to_date=to_date)
             print(stats)
         return self.render('admin/stats.html', stats=stats)

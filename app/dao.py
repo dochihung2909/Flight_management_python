@@ -221,7 +221,6 @@ def serialize_datetime(obj):
 
 
 def stats_revenue_flight(flight_id = None):
-
     stats = (db.session.query(Booking.flight_id, func.sum(Ticket.price).label('total_price'))
             .join(Flight, Booking.flight_id == Flight.id)
             .join(Ticket, Ticket.booking_id == Booking.id))
@@ -232,15 +231,19 @@ def stats_revenue_flight(flight_id = None):
             .group_by(Booking.flight_id).all())
 
 def stats_revenue_route_by_month(year=None, month=None):
-    return (db.session.query(Route.id, func.sum(Ticket.price)).\
-                join(Flight, Flight.route_id == Route.id).\
-                join(Booking, Booking.flight_id == Flight.id).\
-                join(Ticket, Ticket.booking_id == Booking.id).\
-                filter(Booking.status == 1).\
-                filter(func.YEAR(Booking.booking_date) == year).\
-                filter(func.MONTH(Booking.booking_date) == month).\
-                group_by(Route.id).\
-                all())
+    if year and month:
+        query = (db.session.query(
+            Route.id,
+            func.extract('month', Booking.booking_date).label('booking_month'),
+            func.sum(Ticket.price).label('total_revenue')
+        )
+        .join(Flight, Flight.route == Route.id)
+        .join(Booking, Booking.flight_id == Flight.id)
+        .join(Ticket, Ticket.booking_id == Booking.id)
+        .filter((Booking.status == 1) & (func.extract('year', Booking.booking_date) == year) & (func.extract('month', Booking.booking_date) == month))
+        .group_by(Route.id, 'booking_month')
+        .all())
+    return (query)
 
 def stats_revenue_route(from_date = None, to_date = None):
     query = (db.session.query(Route.id, Route.name, func.count(Flight.id), func.sum(Ticket.price).label('total_price'))

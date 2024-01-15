@@ -1,4 +1,21 @@
+
+
+
 {% extends 'admin/master.html' %}
+
+{% block head %}
+    {{ super() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+    </script>
+
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+        rel="stylesheet" type="text/css" />
+{% endblock %}
+
+
 
 {% block body %}
 <div class="container">
@@ -41,26 +58,20 @@
                 {% endfor %}
             </table>
         </div>
-
     </div>
-    <div class="row mb-5">
+    <div class="row mb-5 ">
         <div class="col-md-7 col-xs-12">
             <canvas id="myChart"></canvas>
         </div>
-        <div class="col-md-6 col-sm-12">
-            <canvas id="cateStats" ></canvas>
-        </div>
-        <div style="width: 80%; margin: auto;">
-            <canvas id="revenueChart"></canvas>
-        </div>
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="{{ url_for('static', filename='js/my-stats.js') }}"></script>
 <script>
+
 window.onload = function() {
   const ctx = document.getElementById('myChart');
-    const byMonth = document.getElementById('cateStats');
+
   let data = [];
   let labels = [];
 
@@ -88,36 +99,6 @@ window.onload = function() {
       }
     }
   });
-
-
-  var revenueData = [
-        { month: 'January', value: 1000 },
-        { month: 'February', value: 1200 },
-        // Add data for other months
-    ];
-
-    var new_ctx = document.getElementById('revenueChart').getContext('2d');
-    new Chart(new_ctx, {
-        type: 'bar', // or 'line' for a line chart
-        data: {
-            labels: revenueData.map(item => item.month),
-            datasets: [{
-                label: 'Monthly Revenue',
-                data: revenueData.map(item => item.value),
-                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Set the color
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
 }
 </script>
 {% endblock %}

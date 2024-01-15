@@ -23,6 +23,7 @@ def home():
         return login()
     airports = dao.get_all_airport()
     seat_types = dao.get_all_seat_type()
+    print(dao.stats_revenue_route_by_month(year=2024, month=1))
     return render_template('frontpage.html', airports=airports, seat_types=seat_types)
 
 
